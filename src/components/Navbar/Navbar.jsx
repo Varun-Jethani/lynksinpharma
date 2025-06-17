@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../../store/userSlice";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,8 +14,8 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
 
   // Get user data from Redux store
-  const user = useSelector((state) => state.auth?.user);
-  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
+  const user = useSelector((state) => state.user.profile);
+  const isLoggedIn = useSelector((state) => !!state.user.profile);
 
   // Grouped navigation items
   const navItems = [
@@ -87,7 +88,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
+    dispatch(logout());
     setIsUserMenuOpen(false);
     navigate("/");
   };

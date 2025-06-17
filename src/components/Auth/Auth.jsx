@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { fetchUserProfile } from "../../../store/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function AuthPage() {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -18,6 +20,7 @@ export default function AuthPage() {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const showNotification = (message, type = "success") => {
     const id = Date.now();
@@ -106,9 +109,15 @@ export default function AuthPage() {
       // Save token if returned (treat as login after verification)
       // The backend does NOT return a token here, so just show success and redirect
       showNotification("Account verified! Please login.", "success");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+      const token = response.data?.token;
+          if (token) {
+            localStorage.setItem("token", token);
+            dispatch(fetchUserProfile());
+            showNotification("Successfully signed in!", "success");
+            setTimeout(() => {
+              navigate("/");
+            }, 1000);
+          }
     } catch (error) {
       showNotification(
         error.response?.data?.message || "OTP verification failed",
@@ -143,11 +152,17 @@ export default function AuthPage() {
     try {
       if (isLoginMode) {
         // Real API call to /user/login
-        const response = await axios.post(
-          "/user/login",
-          { email, password },
-          { withCredentials: true }
-        );
+        let response;
+        try {
+          response = await axios.post(
+            "/user/login",
+            { email, password },
+            { withCredentials: true, validateStatus: () => true }
+          );
+        } catch (err) {
+          // This should not happen unless network error
+          throw err;
+        }
 
         // If user is not verified, backend sends 300 and triggers OTP
         if (response.status === 300) {
@@ -157,11 +172,12 @@ export default function AuthPage() {
           );
           setShowOTPVerification(true);
           startOtpTimer();
-        } else {
+        } else if (response.status >= 200 && response.status < 300) {
           // Save token if returned
           const token = response.data?.token;
           if (token) {
             localStorage.setItem("token", token);
+            dispatch(fetchUserProfile());
             showNotification("Successfully signed in!", "success");
             setTimeout(() => {
               navigate("/");
@@ -169,6 +185,11 @@ export default function AuthPage() {
           } else {
             showNotification("Login failed. No token received.", "error");
           }
+        } else {
+          showNotification(
+            response.data?.message || "Login failed. Please try again.",
+            "error"
+          );
         }
       } else {
         // Real API call to /user/register
@@ -178,47 +199,16 @@ export default function AuthPage() {
           { withCredentials: true }
         );
 
-        const token = response.data?.token;
-        console.log(token);
-        if (token) {
-          localStorage.setItem("token", token);
+        if (response.status >= 200 && response.status < 300) {
+          showNotification("Please verify your email to complete registration.", "success");
+          setShowOTPVerification(true);
+          startOtpTimer();
+        }
+        else {
           showNotification(
-            "Registration successful! You are now logged in.",
-            "success"
+            response.data?.message || "Registration failed. Please try again.",
+            "error"
           );
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-        } else {
-          // Try to auto-login after successful registration
-          try {
-            const loginResponse = await axios.post(
-              "/user/login",
-              { email, password },
-              { withCredentials: true }
-            );
-            const loginToken = loginResponse.data?.token;
-            if (loginToken) {
-              localStorage.setItem("token", loginToken);
-              showNotification(
-                "Registration successful! You are now logged in.",
-                "success"
-              );
-              setTimeout(() => {
-                navigate("/");
-              }, 1000);
-            } else {
-              showNotification(
-                "Registration successful! Please login manually.",
-                "success"
-              );
-            }
-          } catch (loginError) {
-            showNotification(
-              "Registration successful, but auto-login failed. Please login manually.",
-              "error"
-            );
-          }
         }
       }
     } catch (error) {
