@@ -1,38 +1,100 @@
-import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
 
+  // Get user data from Redux store
+  const user = useSelector((state) => state.auth?.user);
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
+
+  // Grouped navigation items
   const navItems = [
-    "Home",
-    "Our Products",
-    "About Us",
-    "Company Profile",
-
-    "Quality & Compliance",
-    "IP Protection",
-    "ESG",
-    "Contact Us",
-    "Careers",
+    { name: "Home", type: "single" },
+    { name: "Our Products", type: "single" },
+    {
+      name: "About",
+      type: "dropdown",
+      items: [
+        { name: "About Us", path: "/about-us" },
+        { name: "Company Profile", path: "/company-profile" },
+      ],
+    },
+    {
+      name: "Compliance & Protection",
+      type: "dropdown",
+      items: [
+        { name: "Quality & Compliance", path: "/quality-compliance" },
+        { name: "IP Protection", path: "/ip-protection" },
+        { name: "ESG", path: "/esg" },
+      ],
+    },
+    { name: "Contact Us", type: "single" },
+    { name: "Careers", type: "single" },
   ];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleItemClick = (item) => {
-    if (item.toLowerCase().replace(/ /g, "-") == "home") {
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
+  const handleItemClick = (item, path = null) => {
+    const routePath = path || `/${item.toLowerCase().replace(/ /g, "-")}`;
+
+    if (item.toLowerCase() === "home") {
       navigate("/");
     } else {
-      navigate(`/${item.toLowerCase().replace(/ /g, "-")}`);
+      navigate(routePath);
     }
 
     setActiveItem(item);
     setIsMenuOpen(false);
+    setOpenDropdown(null);
+  };
+
+  const handleDropdownToggle = (dropdownName) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
+
+  const handleLogin = () => {
+    navigate("/auth");
+    setIsUserMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    setIsUserMenuOpen(false);
+    navigate("/");
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+    setIsUserMenuOpen(false);
   };
 
   return (
@@ -40,10 +102,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo/Brand */}
-          <div className="flex-shrink-0 group cursor-pointer">
+          <div
+            className="flex-shrink-0 group cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <span className="text-white font-bold text-lg">L</span>
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <span className="text-white font-bold text-xl">L</span>
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Your Logo
@@ -52,30 +117,172 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:block">
-            <div className="flex items-center space-x-1">
+          <div
+            className="hidden lg:flex items-center space-x-2"
+            ref={dropdownRef}
+          >
+            <div className="flex items-center space-x-1 mr-6">
               {navItems.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleItemClick(item)}
-                  className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 group ${
-                    activeItem === item
-                      ? "text-blue-400 bg-slate-800/50"
-                      : "text-gray-300 hover:text-white hover:bg-slate-800/30"
-                  }`}
-                >
-                  {item}
-                  {activeItem === item && (
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full"></div>
+                <div key={index} className="relative">
+                  {item.type === "single" ? (
+                    <button
+                      onClick={() => handleItemClick(item.name)}
+                      className={`relative px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 group ${
+                        activeItem === item.name
+                          ? "text-blue-400 bg-slate-800/50 shadow-md"
+                          : "text-gray-200 hover:text-white hover:bg-slate-800/30"
+                      }`}
+                    >
+                      {item.name}
+                      {activeItem === item.name && (
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-1 bg-blue-400 rounded-full"></div>
+                      )}
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                  ) : (
+                    <div className="relative">
+                      <button
+                        onClick={() => handleDropdownToggle(item.name)}
+                        onMouseEnter={() => handleDropdownToggle(item.name)}
+                        className={`relative px-6 py-3 text-base font-medium rounded-lg transition-all duration-300 group flex items-center space-x-2 ${
+                          openDropdown === item.name
+                            ? "text-blue-400 bg-slate-800/50 shadow-md"
+                            : "text-gray-200 hover:text-white hover:bg-slate-800/30"
+                        }`}
+                      >
+                        <span>{item.name}</span>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 ${
+                            openDropdown === item.name ? "rotate-180" : ""
+                          }`}
+                        />
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      {openDropdown === item.name && (
+                        <div
+                          className="absolute top-full left-0 mt-2 w-64 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2 z-50"
+                          onMouseLeave={() => setOpenDropdown(null)}
+                        >
+                          {item.items.map((subItem, subIndex) => (
+                            <button
+                              key={subIndex}
+                              onClick={() =>
+                                handleItemClick(subItem.name, subItem.path)
+                              }
+                              className="w-full text-left px-4 py-3 text-gray-200 hover:text-white hover:bg-slate-700/50 transition-colors duration-200 text-base font-medium"
+                            >
+                              {subItem.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
-                  <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </button>
+                </div>
               ))}
+            </div>
+
+            {/* User Authentication Section */}
+            <div className="relative">
+              {isLoggedIn ? (
+                <div className="relative">
+                  <button
+                    onClick={toggleUserMenu}
+                    className="flex items-center space-x-3 px-4 py-2 text-gray-200 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-300 border border-slate-700/50"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-base font-medium">
+                      {user?.name || user?.firstName || "User"}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isUserMenuOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* User Dropdown Menu */}
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2">
+                      <button
+                        onClick={handleProfile}
+                        className="w-full text-left px-4 py-3 text-gray-200 hover:text-white hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                      >
+                        <User className="w-4 h-4" />
+                        <span>Profile</span>
+                      </button>
+                      <hr className="border-slate-700/50 my-1" />
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+              )}
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center space-x-3">
+            {/* Mobile User Button */}
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  onClick={toggleUserMenu}
+                  className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full"
+                >
+                  <User className="w-5 h-5 text-white" />
+                </button>
+
+                {/* Mobile User Dropdown */}
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2">
+                    <div className="px-4 py-2 text-gray-400 text-sm font-medium border-b border-slate-700/50">
+                      {user?.name || user?.firstName || "User"}
+                    </div>
+                    <button
+                      onClick={handleProfile}
+                      className="w-full text-left px-4 py-3 text-gray-200 hover:text-white hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                    >
+                      <User className="w-4 h-4" />
+                      <span>Profile</span>
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+              >
+                <User className="w-5 h-5 text-white" />
+              </button>
+            )}
+
+            {/* Mobile Menu Toggle */}
             <button
               onClick={toggleMenu}
               className="relative inline-flex items-center justify-center p-3 rounded-xl text-gray-300 hover:text-white hover:bg-slate-800/30 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
@@ -101,25 +308,100 @@ const Navbar = () => {
       >
         <div className="px-4 pt-4 pb-6 space-y-2 bg-slate-900/95 backdrop-blur-md border-t border-slate-700/50">
           {navItems.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => handleItemClick(item)}
-              className={`w-full text-left px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 group ${
-                activeItem === item
-                  ? "text-blue-400 bg-slate-800/50 shadow-lg"
-                  : "text-gray-300 hover:text-white hover:bg-slate-800/30"
-              }`}
-            >
-              <div className="relative">
-                {item}
-                {activeItem === item && (
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-4 bg-blue-400 rounded-full -ml-4"></div>
-                )}
-              </div>
-            </button>
+            <div key={index}>
+              {item.type === "single" ? (
+                <button
+                  onClick={() => handleItemClick(item.name)}
+                  className={`w-full text-left px-5 py-4 text-lg font-medium rounded-xl transition-all duration-300 group ${
+                    activeItem === item.name
+                      ? "text-blue-400 bg-slate-800/50 shadow-lg"
+                      : "text-gray-200 hover:text-white hover:bg-slate-800/30"
+                  }`}
+                >
+                  <div className="relative">
+                    {item.name}
+                    {activeItem === item.name && (
+                      <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full -ml-5"></div>
+                    )}
+                  </div>
+                </button>
+              ) : (
+                <div>
+                  <button
+                    onClick={() => handleDropdownToggle(item.name)}
+                    className="w-full text-left px-5 py-4 text-lg font-medium rounded-xl transition-all duration-300 text-gray-200 hover:text-white hover:bg-slate-800/30 flex items-center justify-between"
+                  >
+                    <span>{item.name}</span>
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform duration-200 ${
+                        openDropdown === item.name ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Mobile Dropdown Items */}
+                  {openDropdown === item.name && (
+                    <div className="ml-4 mt-2 space-y-1">
+                      {item.items.map((subItem, subIndex) => (
+                        <button
+                          key={subIndex}
+                          onClick={() =>
+                            handleItemClick(subItem.name, subItem.path)
+                          }
+                          className="w-full text-left px-4 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-slate-800/30 rounded-lg transition-all duration-300"
+                        >
+                          {subItem.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           ))}
+
+          {/* Mobile Login/Logout Section */}
+          <div className="pt-4 border-t border-slate-700/50">
+            {isLoggedIn ? (
+              <div className="space-y-2">
+                <div className="px-5 py-2 text-gray-400 text-sm font-medium">
+                  Welcome, {user?.name || user?.firstName || "User"}
+                </div>
+                <button
+                  onClick={handleProfile}
+                  className="w-full text-left px-5 py-4 text-lg font-medium text-gray-200 hover:text-white hover:bg-slate-800/30 rounded-xl transition-all duration-300 flex items-center space-x-3"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Profile</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-5 py-4 text-lg font-medium text-red-400 hover:text-red-300 hover:bg-slate-800/30 rounded-xl transition-all duration-300 flex items-center space-x-3"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="w-full px-5 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium text-lg rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center space-x-3"
+              >
+                <User className="w-5 h-5" />
+                <span>Login</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Click outside to close user menu */}
+      {isUserMenuOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsUserMenuOpen(false)}
+        ></div>
+      )}
     </nav>
   );
 };
