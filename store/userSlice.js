@@ -13,6 +13,7 @@ export const fetchUserProfile = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      console.log("User profile fetched:", response.data.data);
       return response.data.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

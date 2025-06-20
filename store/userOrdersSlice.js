@@ -10,7 +10,7 @@ export const fetchUserOrders = createAsyncThunk(
       const response = await axios.get("/order/user", {
         withCredentials: true,
       });
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }

@@ -22,7 +22,7 @@ import { fetchCart } from "../../../store/cartSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  // Defensive: fallback if state.cart is undefined
+
   const cartState = useSelector((state) => state.cart) || {};
   const { items: cartItems = [], loading = false, error = null } = cartState;
   console.log("Cart items:", cartItems);
@@ -109,46 +109,64 @@ const Cart = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Submit inquiry
-  const submitInquiry = () => {
+  // Submit inquiry and create order
+  const submitInquiry = async () => {
     if (validateForm()) {
-      // Handle inquiry submission here
-      console.log("Inquiry submitted:", { formData, cartItems });
-      alert("Inquiry submitted successfully! We'll contact you soon.");
-      setShowModal(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        company: "",
-        message: "",
-      });
+      if (
+        !window.confirm(
+          "Are you sure you want to submit this inquiry and create an order?"
+        )
+      )
+        return;
+      try {
+        // Prepare order payload
+        const orderPayload = {
+          name: formData.name,
+          Email: formData.email,
+          phone: formData.phone,
+          Address: formData.address,
+          CompanyName: formData.company,
+          Message: formData.message,
+
+          products: mergedCartItems.map((item) => ({
+            product: item.productId,
+            quantity: item.quantity,
+          })),
+        };
+        await axios.post("/order", orderPayload, { withCredentials: true });
+        alert("Order created successfully! Our team will contact you soon.");
+        setShowModal(false);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          company: "",
+          message: "",
+        });
+        dispatch(fetchCart()); // Refresh cart after order
+      } catch (err) {
+        alert(
+          err.response?.data?.message ||
+            "Failed to create order. Please try again."
+        );
+      }
     }
   };
 
-  // Get all products from redux
-  const productsState = useSelector((state) => state.products) || {};
-  const { items: allProducts = [] } = productsState;
-
-  // Join cart items with product details
+  // Map cart items to display format
   const mergedCartItems = cartItems.map((cartItem) => {
-    const product = allProducts.find(
-      (p) =>
-        p._id === (cartItem.product._id || cartItem.product || cartItem._id)
-    );
+    const product = cartItem.product || {};
     return {
       ...cartItem,
-      ...((product && {
-        catalogNo: product.CatelogNumber || product.catalogNo || "",
-        name: product.ChemicalName || product.name || "",
-        casNo: product.CASNumber || product.casNo || "",
-        mw: product.MolecularWeight?.toString() || product.mw || "",
-        purity: product.purity || "Research Grade",
-        formula: product.formula || "",
-        image: product.Image || product.image || "",
-      }) ||
-        {}),
+      catalogNo: product.CatelogNumber || "",
+      name: product.ChemicalName || "",
+      casNo: product.CASNumber || "",
+      mw: product.MolecularWeight?.toString() || "",
+      purity: "Research Grade", // Default since not in your data structure
+      formula: product.formula || "", // Add if available in your data
+      image: product.Image || "",
+      productId: product._id || cartItem._id,
     };
   });
 
@@ -217,17 +235,27 @@ const Cart = () => {
           <div className="lg:col-span-2 space-y-6">
             {mergedCartItems.map((item) => (
               <div
-                key={item.catalogNo || item._id}
+                key={item._id}
                 className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-white/50 hover:shadow-2xl transition-all duration-300"
               >
                 <div className="flex flex-col sm:flex-row gap-6">
                   {/* Product Image/Structure */}
                   <div className="w-full sm:w-32 h-32 bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 rounded-2xl flex flex-col items-center justify-center border-2 border-blue-100">
                     <div className="text-center">
-                      {getStructureIcon(item.image)}
-                      <span className="block text-xs text-gray-600 font-medium mt-1">
-                        {item.formula}
-                      </span>
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-contain rounded-2xl"
+                        />
+                      ) : (
+                        <>
+                          {getStructureIcon(item.image)}
+                          <span className="block text-xs text-gray-600 font-medium mt-1">
+                            Structure
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -256,6 +284,12 @@ const Cart = () => {
                             <span className="font-mono">{item.mw}</span>
                           </div>
                         </div>
+                        {item.formula && (
+                          <div className="mt-2 text-sm">
+                            <span className="text-gray-600">Formula:</span>{" "}
+                            <span className="font-mono">{item.formula}</span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Quantity Controls */}
@@ -263,7 +297,7 @@ const Cart = () => {
                         <div className="flex items-center bg-gray-50 rounded-xl border-2 border-gray-200">
                           <button
                             onClick={() =>
-                              updateQuantity(item.catalogNo, item.quantity - 1)
+                              updateQuantity(item.productId, item.quantity - 1)
                             }
                             className="p-2 hover:bg-gray-100 transition-colors duration-200 rounded-l-xl"
                             disabled={item.quantity <= 1}
@@ -282,7 +316,7 @@ const Cart = () => {
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(item.catalogNo, item.quantity + 1)
+                              updateQuantity(item.productId, item.quantity + 1)
                             }
                             className="p-2 hover:bg-gray-100 transition-colors duration-200 rounded-r-xl"
                           >
@@ -292,7 +326,7 @@ const Cart = () => {
 
                         {/* Remove Button */}
                         <button
-                          onClick={() => removeItem(item.catalogNo)}
+                          onClick={() => removeItem(item.productId)}
                           className="text-red-500 hover:text-red-700 transition-colors duration-200 p-2 hover:bg-red-50 rounded-xl"
                         >
                           <Trash2 size={18} />
@@ -553,7 +587,9 @@ const Cart = () => {
                               <div>CAS: {item.casNo}</div>
                               <div>M.W.: {item.mw}</div>
                               <div>Purity: {item.purity}</div>
-                              <div>Formula: {item.formula}</div>
+                              {item.formula && (
+                                <div>Formula: {item.formula}</div>
+                              )}
                             </div>
                           </div>
                         ))}

@@ -7,8 +7,8 @@ export const fetchCart = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/user/cart", { withCredentials: true });
-      console.log("Fetched cart items:", response.data.data); // Debugging log
-      return response.data.data;
+      console.log("Fetched cart items:", response.data.data.cart); // Debugging log
+      return response.data.data.cart;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, use } from "react";
-import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Menu, X, User, LogOut, ChevronDown, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../store/userSlice";
@@ -17,10 +17,25 @@ const Navbar = () => {
   const user = useSelector((state) => state.user.profile);
   const isLoggedIn = useSelector((state) => !!state.user.profile);
 
+  // Get cart data from Redux store (assuming you have cart slice)
+  const cartItems = useSelector((state) => state.cart?.items || []);
+  const cartItemCount = cartItems.reduce(
+    (total, item) => total + (item.quantity || 0),
+    0
+  );
+
+  // Helper function to get first name only
+  const getDisplayName = (user) => {
+    if (!user) return "User";
+    if (user.firstName) return user.firstName;
+    if (user.name) return user.name.split(" ")[0];
+    return "User";
+  };
+
   // Grouped navigation items
   const navItems = [
     { name: "Home", type: "single" },
-    { name: "Our Products", type: "single" },
+    { name: "Products", type: "single" },
     {
       name: "About",
       type: "dropdown",
@@ -30,7 +45,7 @@ const Navbar = () => {
       ],
     },
     {
-      name: "Compliance & Protection",
+      name: "Compliance ",
       type: "dropdown",
       items: [
         { name: "Quality & Compliance", path: "/quality-compliance" },
@@ -96,6 +111,10 @@ const Navbar = () => {
   const handleProfile = () => {
     navigate("/profile");
     setIsUserMenuOpen(false);
+  };
+
+  const handleCart = () => {
+    navigate("/cart");
   };
 
   return (
@@ -185,62 +204,99 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* User Authentication Section */}
-            <div className="relative">
-              {isLoggedIn ? (
-                <div className="relative">
-                  <button
-                    onClick={toggleUserMenu}
-                    className="flex items-center space-x-3 px-4 py-2 text-gray-200 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-300 border border-slate-700/50"
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-base font-medium">
-                      {user?.name || user?.firstName || "User"}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        isUserMenuOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
+            {/* Cart and User Authentication Section */}
+            <div className="flex items-center space-x-3">
+              {/* Cart Button */}
+              <button
+                onClick={handleCart}
+                className="relative flex items-center justify-center w-11 h-11 text-gray-200 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-300 border border-slate-700/50 group"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-pulse">
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
+                  </span>
+                )}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
 
-                  {/* User Dropdown Menu */}
-                  {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2">
-                      <button
-                        onClick={handleProfile}
-                        className="w-full text-left px-4 py-3 text-gray-200 hover:text-white hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
-                      >
-                        <User className="w-4 h-4" />
-                        <span>Profile</span>
-                      </button>
-                      <hr className="border-slate-700/50 my-1" />
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  <User className="w-4 h-4" />
-                  <span>Login</span>
-                </button>
-              )}
+              {/* User Authentication */}
+              <div className="relative">
+                {isLoggedIn ? (
+                  <div className="relative">
+                    <button
+                      onClick={toggleUserMenu}
+                      className="flex items-center space-x-3 px-4 py-2 text-gray-200 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-300 border border-slate-700/50"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-base font-medium max-w-24 truncate">
+                        {getDisplayName(user)}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          isUserMenuOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {/* User Dropdown Menu */}
+                    {isUserMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2">
+                        <div className="px-4 py-2 text-gray-400 text-sm font-medium border-b border-slate-700/50">
+                          {user?.name ||
+                            `${user?.firstName || ""} ${
+                              user?.lastName || ""
+                            }`.trim() ||
+                            "User"}
+                        </div>
+                        <button
+                          onClick={handleProfile}
+                          className="w-full text-left px-4 py-3 text-gray-200 hover:text-white hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                        >
+                          <User className="w-4 h-4" />
+                          <span>Profile</span>
+                        </button>
+                        <hr className="border-slate-700/50 my-1" />
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleLogin}
+                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Login</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu section */}
           <div className="lg:hidden flex items-center space-x-3">
+            {/* Mobile Cart Button */}
+            <button
+              onClick={handleCart}
+              className="relative flex items-center justify-center w-10 h-10 bg-slate-800/30 hover:bg-slate-800/50 rounded-full text-gray-200 hover:text-white transition-all duration-300"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-lg">
+                  {cartItemCount > 9 ? "9+" : cartItemCount}
+                </span>
+              )}
+            </button>
+
             {/* Mobile User Button */}
             {isLoggedIn ? (
               <div className="relative">
@@ -255,7 +311,7 @@ const Navbar = () => {
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-700/50 py-2">
                     <div className="px-4 py-2 text-gray-400 text-sm font-medium border-b border-slate-700/50">
-                      {user?.name || user?.firstName || "User"}
+                      {getDisplayName(user)}
                     </div>
                     <button
                       onClick={handleProfile}
@@ -361,12 +417,28 @@ const Navbar = () => {
             </div>
           ))}
 
+          {/* Mobile Cart Section */}
+          <button
+            onClick={handleCart}
+            className="w-full text-left px-5 py-4 text-lg font-medium text-gray-200 hover:text-white hover:bg-slate-800/30 rounded-xl transition-all duration-300 flex items-center justify-between"
+          >
+            <div className="flex items-center space-x-3">
+              <ShoppingCart className="w-5 h-5" />
+              <span>Cart</span>
+            </div>
+            {cartItemCount > 0 && (
+              <span className="bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-bold px-2 py-1 rounded-full">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+
           {/* Mobile Login/Logout Section */}
           <div className="pt-4 border-t border-slate-700/50">
             {isLoggedIn ? (
               <div className="space-y-2">
                 <div className="px-5 py-2 text-gray-400 text-sm font-medium">
-                  Welcome, {user?.name || user?.firstName || "User"}
+                  Welcome, {getDisplayName(user)}
                 </div>
                 <button
                   onClick={handleProfile}

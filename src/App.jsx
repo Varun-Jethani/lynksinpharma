@@ -10,6 +10,8 @@ import { fetchUserProfile } from "../store/userSlice";
 import AuthPage from "./components/Auth/Auth";
 import axios from "axios";
 import Cart from "./components/Cart/Cart";
+import ContactUs from "./components/Contact/ContactUs";
+import Profile from "./components/Profile/Profile";
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -29,10 +31,12 @@ const App = () => {
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/" element={<Home />} />
-        <Route path="/our-products" element={<OurProducts />} />
+        <Route path="/products" element={<OurProducts />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

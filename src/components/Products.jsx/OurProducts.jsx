@@ -14,6 +14,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { fetchProducts } from "../../../store/productsSlice";
+import { fetchUserProfile } from "../../../store/userSlice";
 import ProductsGrid from "./ProductsGrid";
 import Header from "./Header";
 
@@ -103,15 +104,18 @@ export default function LifeScienceProductsCatalog() {
     loading,
     error,
   } = useSelector((state) => state.products);
+  const userProfile = useSelector((state) => state.user.profile);
+  const userLoading = useSelector((state) => state.user.loading);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("catalog");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [cartUpdateLoading, setCartUpdateLoading] = useState(false);
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchUserProfile());
   }, [dispatch]);
-  console.log("Products:", products);
 
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(products)) return [];
@@ -169,9 +173,10 @@ export default function LifeScienceProductsCatalog() {
     return <Icon size={32} className="text-blue-400" />;
   };
 
-  // Add to cart handler
+  // Add to cart handler (for new items)
   const handleAddToCart = async (product, quantity) => {
     try {
+      setCartUpdateLoading(true);
       await axios.post(
         "/user/cart/add",
         {
@@ -181,8 +186,33 @@ export default function LifeScienceProductsCatalog() {
         { withCredentials: true }
       );
       alert("Product added to cart!");
+      // Refresh user profile to update cart
+      dispatch(fetchUserProfile());
     } catch (error) {
       alert(error.response?.data?.message || "Failed to add product to cart.");
+    } finally {
+      setCartUpdateLoading(false);
+    }
+  };
+
+  // Update cart quantity handler (for existing cart items)
+  const handleUpdateCart = async (productId, quantity) => {
+    try {
+      setCartUpdateLoading(true);
+      await axios.post(
+        "/user/cart/update",
+        {
+          productId,
+          quantity,
+        },
+        { withCredentials: true }
+      );
+      // Refresh user profile to update cart
+      dispatch(fetchUserProfile());
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to update cart.");
+    } finally {
+      setCartUpdateLoading(false);
     }
   };
 
@@ -197,6 +227,18 @@ export default function LifeScienceProductsCatalog() {
       {error && (
         <div className="text-center py-10 text-xl text-red-600 font-bold">
           {error}
+        </div>
+      )}
+
+      {/* Cart Update Loading Overlay */}
+      {cartUpdateLoading && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 shadow-xl">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600 font-medium">Updating cart...</p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -273,6 +315,11 @@ export default function LifeScienceProductsCatalog() {
               {products.length}
             </span>{" "}
             products
+            {userProfile?.cart && (
+              <span className="ml-4 text-green-600 font-bold">
+                | {userProfile.cart.length} items in cart
+              </span>
+            )}
           </div>
         </div>
 
@@ -282,6 +329,8 @@ export default function LifeScienceProductsCatalog() {
           setSelectedProduct={setSelectedProduct}
           getStructureIcon={getStructureIcon}
           onAddToCart={handleAddToCart}
+          onUpdateCart={handleUpdateCart}
+          userCart={userProfile?.cart || []}
         />
 
         {/* Enhanced No Results - Responsive */}
