@@ -4,11 +4,12 @@ import Home from "./components/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import About from "./components/AboutUs/About";
 import CompanyProfile from "./components/CompanyProfile";
-import OurProducts from "./components/OurProducts";
+import OurProducts from "./components/Products.jsx/OurProducts";
 import { Provider, useDispatch } from "react-redux";
 import { fetchUserProfile } from "../store/userSlice";
 import AuthPage from "./components/Auth/Auth";
 import axios from "axios";
+import Cart from "./components/Cart/Cart";
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/our-products" element={<OurProducts />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/company-profile" element={<CompanyProfile />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </BrowserRouter>
   );
