@@ -1,0 +1,13 @@
+{
+    "rewrites": [
+      { "source": "/auth", "destination": "/" },
+      { "source": "/products", "destination": "/" },
+      { "source": "/about-us", "destination": "/" },
+      { "source": "/company-profile", "destination": "/" },
+      { "source": "/cart", "destination": "/" },
+      { "source": "/contact-us", "destination": "/" },
+      { "source": "/profile", "destination": "/" },
+      { "source": "/Careers", "destination": "/" },
+      { "source": "/", "destination": "/index.html" }
+    ]
+  }
