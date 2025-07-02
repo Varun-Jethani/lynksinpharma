@@ -18,6 +18,8 @@ import { fetchUserProfile } from "../../../store/userSlice";
 import ProductsGrid from "./ProductsGrid";
 import Header from "./Header";
 import { s } from "framer-motion/client";
+import { fetchSearchHistory } from "../../../store/searchHistorySlice";
+import RecentSearches from "./RecentSearches";
 
 const ProductModal = ({ product, onClose }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -72,16 +74,15 @@ const ProductModal = ({ product, onClose }) => (
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-100">
-            <h3 className="font-semibold text-gray-700 mb-4 text-center">
-              Molecular Structure
-            </h3>
-            <div className="flex flex-col items-center justify-center h-32">
-              <Atom size={48} className="text-blue-500 mb-2" />
-              <span className="text-sm text-gray-600">Structure diagram</span>
-              <span className="text-xs text-gray-500 mt-1">Coming soon</span>
-            </div>
-          </div>
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-100">
+        <div className="flex items-center justify-center h-50">
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            className="w-full h-full object-contain scale-125" 
+          />
+        </div>
+      </div>
         </div>
 
         <div className="flex gap-3">
@@ -107,15 +108,18 @@ export default function LifeScienceProductsCatalog() {
   } = useSelector((state) => state.products);
   const userProfile = useSelector((state) => state.user.profile);
   const userLoading = useSelector((state) => state.user.loading);
+  const searchHistory = useSelector((state) => state.searchHistory.items);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("catalog");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cartUpdateLoading, setCartUpdateLoading] = useState(false);
+  console.log("Search History:", searchHistory);
 
   useEffect(() => {
     dispatch(fetchProducts());
     dispatch(fetchUserProfile());
+    dispatch(fetchSearchHistory());
   }, [dispatch]);
 
   const filteredProducts = useMemo(() => {
@@ -167,6 +171,24 @@ export default function LifeScienceProductsCatalog() {
 
     return filtered;
   }, [products, searchTerm, sortBy, sortOrder]);
+
+  const mappedSearchHistory = useMemo(() => {
+    const mapped = searchHistory.map((product) => ({
+      catalogNo: product.CatelogNumber || product.catalogNo || "",
+      name: product.ChemicalName || product.name || "",
+      casNo: product.CASNumber || product.casNo || "",
+      mw: product.MolecularWeight?.toString() || product.mw || "",
+      purity: product.purity || "Research Grade",
+      formula: product.formula || "",
+      image: product.Image || product.image || "",
+      inStock: product.inStock,
+      _id: product._id,
+      // Add more mappings as needed
+    }));
+    return mapped.reverse();
+  }, [searchHistory]);
+
+  
 
   const getStructureIcon = (index) => {
     const icons = [Atom, Beaker, FlaskConical];
@@ -378,6 +400,26 @@ export default function LifeScienceProductsCatalog() {
             )}
           </div>
         </div>
+
+        {(searchHistory.length > 0) && (
+          <div className="mt-8">
+            
+            <RecentSearches
+              searchHistory={mappedSearchHistory}
+              onProductClick={handleViewProduct}
+              onAddToCart={handleAddToCart}
+              onUpdateCart={handleUpdateCart}
+              userCart={userProfile?.cart || []}
+              onClearHistory={() => {
+                // Add API call to clear search history
+                axios.delete('/user/search/history/clear', {}, { withCredentials: true })
+                  .then(() => dispatch(fetchSearchHistory()))
+                  .catch(() => {});
+              }}
+              isVisible={mappedSearchHistory.length > 0}
+            />
+        </div>
+        )}
 
         {/* Enhanced Product Grid */}
         <ProductsGrid
