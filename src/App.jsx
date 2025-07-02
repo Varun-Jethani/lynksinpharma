@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import About from "./components/AboutUs/About";
-import CompanyProfile from "./components/CompanyProfile";
+
 import OurProducts from "./components/Products.jsx/OurProducts";
 import { Provider, useDispatch } from "react-redux";
 import { fetchUserProfile } from "../store/userSlice";
@@ -12,6 +12,8 @@ import axios from "axios";
 import Cart from "./components/Cart/Cart";
 import ContactUs from "./components/Contact/ContactUs";
 import Profile from "./components/Profile/Profile";
+import CompanyProfile from "./components/AboutUs/CompanyProfile";
+import CareersPage from "./components/Career/Career";
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -37,6 +39,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/Careers" element={<CareersPage />} />
       </Routes>
     </BrowserRouter>
   );

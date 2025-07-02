@@ -5,6 +5,7 @@ const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
@@ -24,13 +25,13 @@ const ContactUs = () => {
     setSubmitStatus(null);
 
     // Only send required fields
-    const { name, email, subject, message } = formData;
-    const payload = { name, email, subject, message };
+    const { name, email, phone, subject, message } = formData;
+    const payload = { name, email, phone, subject, message };
 
     try {
       await axios.post("/contactus", payload);
       setSubmitStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (error) {
       setSubmitStatus("error");
       console.error("Error submitting form:", error);
@@ -135,7 +136,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Phone</h3>
-                      <p className="text-gray-600">+1 (555) 123-4567</p>
+                      <p className="text-gray-600">+91 9745377123</p>
                     </div>
                   </div>
 
@@ -224,6 +225,25 @@ const ContactUs = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
                     placeholder="john.smith@university.edu"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
+                    placeholder="+91 9745377123"
                   />
                 </div>
 

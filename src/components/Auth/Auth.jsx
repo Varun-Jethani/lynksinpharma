@@ -110,14 +110,14 @@ export default function AuthPage() {
       // The backend does NOT return a token here, so just show success and redirect
       showNotification("Account verified! Please login.", "success");
       const token = response.data?.token;
-          if (token) {
-            localStorage.setItem("token", token);
-            dispatch(fetchUserProfile());
-            showNotification("Successfully signed in!", "success");
-            setTimeout(() => {
-              navigate("/");
-            }, 1000);
-          }
+      if (token) {
+        localStorage.setItem("token", token);
+        dispatch(fetchUserProfile());
+        showNotification("Successfully signed in!", "success");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
     } catch (error) {
       showNotification(
         error.response?.data?.message || "OTP verification failed",
@@ -200,11 +200,13 @@ export default function AuthPage() {
         );
 
         if (response.status >= 200 && response.status < 300) {
-          showNotification("Please verify your email to complete registration.", "success");
+          showNotification(
+            "Please verify your email to complete registration.",
+            "success"
+          );
           setShowOTPVerification(true);
           startOtpTimer();
-        }
-        else {
+        } else {
           showNotification(
             response.data?.message || "Registration failed. Please try again.",
             "error"
@@ -422,6 +424,7 @@ export default function AuthPage() {
 
             {/* Submit Button */}
             <button
+              type="submit"
               onClick={handleSubmit}
               disabled={isLoading}
               className={`w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl ${

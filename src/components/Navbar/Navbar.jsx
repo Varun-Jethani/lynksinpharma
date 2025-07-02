@@ -3,6 +3,7 @@ import { Menu, X, User, LogOut, ChevronDown, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../store/userSlice";
+import logoImg from "../../assets/lynksinlogo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,17 +51,20 @@ const Navbar = () => {
       items: [
         { name: "Quality & Compliance", path: "/quality-compliance" },
         { name: "IP Protection", path: "/ip-protection" },
-        { name: "ESG", path: "/esg" },
       ],
     },
     { name: "Contact Us", type: "single" },
     { name: "Careers", type: "single" },
   ];
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (desktop only)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        !isMobile() &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setOpenDropdown(null);
       }
     };
@@ -70,6 +74,9 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Helper to detect mobile
+  const isMobile = () => window.innerWidth < 1024;
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -94,7 +101,19 @@ const Navbar = () => {
   };
 
   const handleDropdownToggle = (dropdownName) => {
-    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+    // On mobile, toggle open/close; on desktop, open only
+    if (isMobile()) {
+      setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+    } else {
+      setOpenDropdown(dropdownName);
+    }
+  };
+
+  // New function specifically for mobile dropdown item clicks
+  const handleMobileDropdownItemClick = (subItem) => {
+    handleItemClick(subItem.name, subItem.path);
+    setOpenDropdown(null);
+    setIsMenuOpen(false); // Also close the main mobile menu
   };
 
   const handleLogin = () => {
@@ -127,11 +146,15 @@ const Navbar = () => {
             onClick={() => navigate("/")}
           >
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <span className="text-white font-bold text-xl">L</span>
+              <div className="w-18 h-18  rounded-xl flex items-center justify-center  group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+                <img
+                  src={logoImg}
+                  alt="Lynksin Logo"
+                  className="w-18 h-18 object-contain"
+                />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Your Logo
+                Lynskin Pharma
               </span>
             </div>
           </div>
@@ -324,7 +347,7 @@ const Navbar = () => {
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-slate-700/50 transition-colors duration-200 flex items-center space-x-3"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="w-5 h-5" />
                       <span>Logout</span>
                     </button>
                   </div>
@@ -396,15 +419,16 @@ const Navbar = () => {
                     />
                   </button>
 
-                  {/* Mobile Dropdown Items */}
+                  {/* Mobile Dropdown Items - FIXED VERSION */}
                   {openDropdown === item.name && (
                     <div className="ml-4 mt-2 space-y-1">
                       {item.items.map((subItem, subIndex) => (
                         <button
                           key={subIndex}
-                          onClick={() =>
-                            handleItemClick(subItem.name, subItem.path)
-                          }
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent event bubbling
+                            handleMobileDropdownItemClick(subItem);
+                          }}
                           className="w-full text-left px-4 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-slate-800/30 rounded-lg transition-all duration-300"
                         >
                           {subItem.name}

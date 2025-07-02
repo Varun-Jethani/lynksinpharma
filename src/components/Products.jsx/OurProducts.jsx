@@ -216,6 +216,44 @@ export default function LifeScienceProductsCatalog() {
     }
   };
 
+  // Save search history when filteredProducts changes and user is logged in
+  useEffect(() => {
+    if (userProfile && filteredProducts.length > 0 && searchTerm.trim()) {
+      const productIds = filteredProducts.map((p) => p._id).filter(Boolean);
+      if (productIds.length > 0) {
+        axios
+          .post(
+            "/user/search/history",
+            { productIds },
+            { withCredentials: true }
+          )
+          .catch(() => {});
+      }
+    }
+    // Only run when filteredProducts, userProfile, or searchTerm changes
+  }, [filteredProducts, userProfile, searchTerm]);
+
+  if (!userProfile && !userLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+        <div className="bg-white/90 rounded-3xl shadow-2xl p-10 text-center border border-white/50">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            Please log in to see the products
+          </h2>
+          <p className="text-gray-600 text-lg mb-6">
+            You must be logged in to view and request products.
+          </p>
+          <a
+            href="/auth"
+            className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+          >
+            Login
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
       {/* Loading/Error States */}

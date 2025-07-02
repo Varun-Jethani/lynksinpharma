@@ -81,6 +81,13 @@ const CompanyProfile = () => {
         "Efficient route scouting, scale-up, and advanced peptide manufacturing technologies",
       gradient: "from-orange-500 to-red-500",
     },
+    {
+      icon: <Beaker className="w-8 h-8" />,
+      title: "Peptide synthesis",
+      description:
+        "Solid-phase and solution-phase synthesis, including complex cyclic peptides",
+      gradient: "from-red-500 to-blue-500",
+    },
   ];
 
   const advantages = [

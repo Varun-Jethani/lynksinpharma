@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Only token is stored in localStorage (don't JSON.parse it!)
-const token = localStorage.getItem("token");
 
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchUserProfile",
@@ -30,6 +29,8 @@ const userSlice = createSlice({
   },
   reducers: {
     logout(state) {
+      // Call /user/logout API to clear backend session
+      axios.post("/user/logout", {}, { withCredentials: true }).catch(() => {});
       state.profile = null;
       state.loading = false;
       state.error = null;
