@@ -19,7 +19,8 @@ const ProductsGrid = ({
   setSelectedProduct,
   getStructureIcon,
   onAddToCart, // For adding new items to cart
-  onUpdateCart, // New prop for updating cart quantities
+  onUpdateCart, // New prop for updating cart 
+  handleViewProduct, // Function to view product details
   userCart = [], // User's cart items
 }) => {
   // State to manage quantities for each product
@@ -85,7 +86,7 @@ const ProductsGrid = ({
                   {product.catalogNo}
                 </span>
                 <button
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => handleViewProduct(product)}
                   className="text-gray-400 hover:text-blue-600 transition-all duration-300 p-3 hover:bg-blue-50 rounded-2xl transform hover:scale-110"
                 >
                   <Eye size={22} />

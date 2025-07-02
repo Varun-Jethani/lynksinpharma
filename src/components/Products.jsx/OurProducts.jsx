@@ -17,6 +17,7 @@ import { fetchProducts } from "../../../store/productsSlice";
 import { fetchUserProfile } from "../../../store/userSlice";
 import ProductsGrid from "./ProductsGrid";
 import Header from "./Header";
+import { s } from "framer-motion/client";
 
 const ProductModal = ({ product, onClose }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -216,6 +217,23 @@ export default function LifeScienceProductsCatalog() {
     }
   };
 
+  //add search history tracking
+  // This effect saves search history when the user is logged in
+
+  const handleViewProduct = (product) => {
+    // Track product view
+    if (userProfile) {
+      axios
+        .post(
+          "/user/search/history",
+          { Productid: product._id },
+          { withCredentials: true }
+        )
+        .catch(() => {});
+    }
+    setSelectedProduct(product);
+  };
+
   // Save search history when filteredProducts changes and user is logged in
   useEffect(() => {
     if (userProfile && filteredProducts.length > 0 && searchTerm.trim()) {
@@ -368,6 +386,7 @@ export default function LifeScienceProductsCatalog() {
           getStructureIcon={getStructureIcon}
           onAddToCart={handleAddToCart}
           onUpdateCart={handleUpdateCart}
+          handleViewProduct={handleViewProduct}
           userCart={userProfile?.cart || []}
         />
 
