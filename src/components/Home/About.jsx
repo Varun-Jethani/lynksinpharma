@@ -18,11 +18,11 @@ const About = ({ Award }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            About Lynksin Pharma Solutions
+            About Lynksin Pharma
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Founded in 2025, we focus on providing ADC linkers, drug-linker
-            conjugates, and peptides for pharmaceutical and biotech clients.
+            We focus on providing ADC linkers, drug-linker conjugates, and
+            peptides for pharmaceutical and biotech clients.
           </p>
         </div>
 
@@ -53,33 +53,35 @@ const About = ({ Award }) => {
             </div>
           </div>
           <div className="bg-white p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-left">
               Key Statistics
             </h3>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-500 mb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-4xl font-extrabold text-blue-500 mb-1 drop-shadow-sm">
                   100+
                 </div>
-                <div className="text-gray-600">Product Catalog</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-500 mb-2">
-                  2025
+                <div className="text-gray-600 text-base font-medium">
+                  Product Catalog
                 </div>
-                <div className="text-gray-600">Founded</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-500 mb-2">
+              <div className="hidden sm:block border-l border-gray-200 h-16 mx-auto"></div>
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-4xl font-extrabold text-green-500 mb-1 drop-shadow-sm">
                   99%
                 </div>
-                <div className="text-gray-600">Quality Rate</div>
+                <div className="text-gray-600 text-base font-medium">
+                  Quality Rate
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500 mb-2">
+              <div className="hidden sm:block border-l border-gray-200 h-16 mx-auto"></div>
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-4xl font-extrabold text-orange-500 mb-1 drop-shadow-sm">
                   24/7
                 </div>
-                <div className="text-gray-600">Support</div>
+                <div className="text-gray-600 text-base font-medium">
+                  Support
+                </div>
               </div>
             </div>
           </div>

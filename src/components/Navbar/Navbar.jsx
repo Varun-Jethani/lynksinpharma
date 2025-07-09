@@ -36,7 +36,6 @@ const Navbar = () => {
   // Grouped navigation items
   const navItems = [
     { name: "Home", type: "single" },
-    { name: "Products", type: "single" },
     {
       name: "About",
       type: "dropdown",
@@ -45,14 +44,8 @@ const Navbar = () => {
         { name: "Company Profile", path: "/company-profile" },
       ],
     },
-    {
-      name: "Compliance ",
-      type: "dropdown",
-      items: [
-        { name: "Quality & Compliance", path: "/quality-compliance" },
-        { name: "IP Protection", path: "/ip-protection" },
-      ],
-    },
+    { name: "Products", type: "single" },
+
     { name: "Contact Us", type: "single" },
     { name: "Careers", type: "single" },
   ];

@@ -15,9 +15,8 @@ import {
 import Hero from "./Hero";
 import About from "./About";
 import Footer from "../Footer";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchSearchHistory } from "../../../store/searchHistorySlice";
-
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,30 +24,35 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const dispatch = useDispatch();
   const searchHistory = useSelector((state) => state.searchHistory.items);
-  
 
   const newproducts = useMemo(() => {
-    if (!searchHistory || searchHistory.length === 0) return [
-    { code: "LPS-0010", name: "DBCO-acid", cas: "1353016-70-2", mw: "305.333" },
-    {
-      code: "LPS-0011",
-      name: "DBCO-NHS ester",
-      cas: "1353016-71-3",
-      mw: "402.4",
-    },
-    {
-      code: "LPS-0012",
-      name: "Mal-amido-(CH2COOH)2",
-      cas: "207613-14-7",
-      mw: "284.22",
-    },
-    {
-      code: "LPS-0013",
-      name: "Mal-PEG1-NHS ester",
-      cas: "1807518-72-4",
-      mw: "310.26",
-    },
-  ];
+    if (!searchHistory || searchHistory.length === 0)
+      return [
+        {
+          code: "LPS-0010",
+          name: "DBCO-acid",
+          cas: "1353016-70-2",
+          mw: "305.333",
+        },
+        {
+          code: "LPS-0011",
+          name: "DBCO-NHS ester",
+          cas: "1353016-71-3",
+          mw: "402.4",
+        },
+        {
+          code: "LPS-0012",
+          name: "Mal-amido-(CH2COOH)2",
+          cas: "207613-14-7",
+          mw: "284.22",
+        },
+        {
+          code: "LPS-0013",
+          name: "Mal-PEG1-NHS ester",
+          cas: "1807518-72-4",
+          mw: "310.26",
+        },
+      ];
     return searchHistory.map((item) => ({
       id: item.id,
       name: item.ChemicalName,
@@ -74,7 +78,7 @@ const Home = () => {
       cta: "View Peptide Services",
     },
     {
-      title: "Complete CRO & CDMO Platform",
+      title: "Complete CRO Platform",
       subtitle: "From discovery to commercialization - your trusted partner",
       cta: "Learn More",
     },
@@ -131,8 +135,7 @@ const Home = () => {
               Our Services & Solutions
             </h2>
             <p className="text-xl text-gray-600">
-              Comprehensive CRO & CDMO platform for all your pharmaceutical
-              needs
+              Comprehensive CRO platform for all your pharmaceutical needs
             </p>
           </div>
 
@@ -144,7 +147,7 @@ const Home = () => {
                   "Peptides & Peptidomimetics",
                   "API Development",
                   "ADC Linkers",
-                  "ADC Conjugation",
+                  "ADC - Drug + Linker Conjugation",
                 ],
                 icon: Beaker,
                 color: "blue",
@@ -205,10 +208,12 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">
-              {(searchHistory && searchHistory.length > 0) ? "Recently Viewed Products" : "Featured Products"}
+              {searchHistory && searchHistory.length > 0
+                ? "Recently Viewed Products"
+                : "Featured Products"}
             </h2>
             <p className="text-xl text-gray-300">
-              High-quality ADC linkers and conjugates
+              High-quality ADC linkers & Linker - drug conjugates & peptides
             </p>
           </div>
 
@@ -223,12 +228,12 @@ const Home = () => {
                 <div className="text-sm text-blue-400 font-medium mb-3 bg-blue-400/10 px-3 py-1 rounded-full w-fit">
                   {product.code}
                 </div>
-                
+
                 {/* Product Name - with better spacing */}
                 <h3 className="text-lg font-bold mb-4 leading-tight flex-grow">
                   {product.name}
                 </h3>
-                
+
                 {/* Product Details */}
                 <div className="space-y-3 text-sm text-gray-300 mb-6">
                   <div className="flex justify-between">
@@ -240,7 +245,7 @@ const Home = () => {
                     <span>{product.mw}</span>
                   </div>
                 </div>
-                
+
                 {/* Inquiry Button */}
                 <button className="w-full py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                   Inquiry
@@ -272,9 +277,9 @@ const Home = () => {
             <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors">
               Request Quote
             </button>
-            <button className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
+            {/* <button className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
               Schedule Consultation
-            </button>
+            </button> */}
           </div>
         </div>
       </section>

@@ -28,8 +28,8 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-gray-400 text-sm">
-              Leading provider of ADC linkers, peptides, and pharmaceutical
-              solutions.
+              Leading provider of ADC linkers, linker - drug conjugate, peptides
+              and pharmaceutical solutions.
             </p>
           </div>
 

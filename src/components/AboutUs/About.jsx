@@ -1,8 +1,10 @@
 import React from "react";
 import { Users, Target, Eye, History, Award, User } from "lucide-react";
 import Footer from "../Footer";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Hero Section */}
@@ -17,7 +19,7 @@ const About = () => {
             <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
               Welcome to{" "}
               <span className="font-bold text-white">
-                Lynksin Pharma Solutions Pvt. Ltd.
+                Lynksin Pharma Pvt. Ltd.
               </span>
               , your trusted partner in advancing life sciences through
               innovative chemical solutions.
@@ -44,8 +46,7 @@ const About = () => {
                 Pioneering Chemical Solutions
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Founded in 2025, we specialize in the research, development, and
-                supply of
+                We specialize in the research, development, and supply of
                 <span className="font-semibold text-blue-800">
                   {" "}
                   ADC linkers
@@ -67,14 +68,9 @@ const About = () => {
                 <span className="font-semibold text-indigo-800">
                   CRO (Contract Research Organization)
                 </span>{" "}
-                and
-                <span className="font-semibold text-indigo-800">
-                  {" "}
-                  CDMO (Contract Development and Manufacturing Organization)
-                </span>
-                , we provide end-to-end support — from early-stage drug
-                discovery to process development and commercial-scale
-                manufacturing.
+                <span className="font-semibold text-indigo-800"> </span>, we
+                provide end-to-end support — from early-stage drug discovery to
+                process development and commercial-scale manufacturing.
               </p>
             </div>
             <div className="relative">
@@ -109,11 +105,11 @@ const About = () => {
               <h2 className="text-2xl font-bold">Our History</h2>
             </div>
             <p className="text-blue-100 leading-relaxed">
-              Lynksin Pharma Solutions emerged in 2025 with a mission to bridge
-              the gap between drug innovation and scalable chemical development.
-              From humble beginnings in Nagpur, India, we've grown into a
-              dynamic force supporting global R&D in antibody-drug conjugates
-              (ADCs) and peptide-based therapeutics.
+              Lynksin Pharma Solutions emerged with a mission to bridge the gap
+              between drug innovation and scalable chemical development. From
+              humble beginnings in Nagpur, India, we've grown into a dynamic
+              force supporting global R&D in antibody-drug conjugates (ADCs) and
+              peptide-based therapeutics.
             </p>
           </div>
 
@@ -220,63 +216,31 @@ const About = () => {
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"></div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-          <div className="grid md:grid-cols-3 gap-8 items-center">
-            <div className="md:col-span-1 text-center">
-              <div className="relative mx-auto w-48 h-48 mb-6">
-                <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl">
-                  <User className="w-24 h-24 text-white" />
-                </div>
-                <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Award className="w-8 h-8 text-white" />
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Dr. Rajendra Chopade
-              </h3>
-              <p className="text-blue-600 font-semibold text-lg">
-                Head of CDMO Business Unit
-              </p>
-            </div>
-
-            <div className="md:col-span-2">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Dr. Rajendra Chopade brings over{" "}
-                  <span className="font-semibold text-blue-800">
-                    18 years of expertise
-                  </span>{" "}
-                  in new drug discovery, synthetic chemistry, and peptide-based
-                  drug development. A doctorate holder in Medicinal Chemistry
-                  from Nagpur University, he has served as a Senior Research
-                  Scientist at Zydus Research Centre, Ahmedabad.
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">
-                    Expertise Areas
-                  </h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li>• Process development for APIs and peptides</li>
-                    <li>• ADC linker chemistry innovation</li>
-                    <li>• Custom synthesis services</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">
-                    Achievements
-                  </h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li>• Publications and conference presentations</li>
-                    <li>• 6+ invention patents filed</li>
-                    <li>• Scientific leadership in ADC development</li>
-                  </ul>
-                </div>
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Kushal Chopade */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
+            <div className="relative mx-auto w-32 h-32 mb-6">
+              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl">
+                <User className="w-16 h-16 text-white" />
               </div>
             </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Kushal Chopade
+            </h3>
+            <p className="text-blue-600 font-semibold text-lg">Director</p>
+          </div>
+
+          {/* Sheetal Chopade */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
+            <div className="relative mx-auto w-32 h-32 mb-6">
+              <div className="w-full h-full bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center shadow-2xl">
+                <User className="w-16 h-16 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Sheetal Chopade
+            </h3>
+            <p className="text-purple-600 font-semibold text-lg">Director</p>
           </div>
         </div>
       </div>
@@ -289,10 +253,13 @@ const About = () => {
           </h2>
           <p className="text-xl text-blue-100 mb-8">
             Partner with Lynksin Pharma Solutions for innovative chemical
-            solutions and comprehensive life science services.
+            solutions and comprehensive life science services
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 shadow-lg">
+            <button
+              onClick={() => navigate("/contact-us")}
+              className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 shadow-lg"
+            >
               Contact Us Today
             </button>
             <button className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-colors duration-300">
