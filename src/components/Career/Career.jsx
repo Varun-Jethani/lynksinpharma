@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Search,
   MapPin,
@@ -18,173 +18,112 @@ import {
   Star,
   ArrowRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CareersPage = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const openPositionsRef = useRef(null);
 
   // Sample job data
   const jobs = [
     {
-      id: 1,
-      title: "Senior Frontend Developer",
-      department: "Engineering",
-      location: "San Francisco, CA",
-      type: "Full-time",
-      salary: "$120k - $160k",
-      experience: "5+ years",
-      description:
-        "Join our engineering team to build cutting-edge web applications using React, TypeScript, and modern web technologies.",
-      requirements: [
-        "5+ years of experience with React and JavaScript",
-        "Strong understanding of TypeScript",
-        "Experience with modern CSS frameworks",
-        "Knowledge of web performance optimization",
-      ],
-      benefits: [
-        "Health Insurance",
-        "401k Matching",
-        "Flexible Hours",
-        "Remote Work",
-      ],
+      title: "Synthetic Chemist",
+      qualification: "B.Sc/M.Sc [Organic Chemistry]",
+      experience: "0-3 Years",
+      overview:
+        "Join our synthetic team to build new molecules for serving a human being",
+      details: {
+        qualification: "B.Sc/M.Sc [Organic Chemistry]",
+        experience: "0-5 Years",
+        responsibilities:
+          "To synthesize and characterize new organic molecules. The work involves developing and optimizing synthetic routes, process development, scale-up, and troubleshooting.",
+        keySkills: [
+          "Designing and synthesizing new organic molecules",
+          "Developing and optimizing synthetic routes",
+          "Purifying and characterizing compounds",
+          "Maintaining detailed records and documentation",
+          "Presenting research findings",
+        ],
+      },
+      applyText: "Apply Now",
     },
     {
-      id: 2,
-      title: "Product Manager",
-      department: "Product",
-      location: "New York, NY",
-      type: "Full-time",
-      salary: "$140k - $180k",
-      experience: "4+ years",
-      description:
-        "Lead product strategy and roadmap for our core platform, working closely with engineering and design teams.",
-      requirements: [
-        "4+ years of product management experience",
-        "Strong analytical and strategic thinking skills",
-        "Experience with Agile methodologies",
-        "Excellent communication skills",
-      ],
-      benefits: [
-        "Health Insurance",
-        "Stock Options",
-        "Flexible PTO",
-        "Learning Budget",
-      ],
+      title: "Synthetic Chemist",
+      qualification: "M.Sc/PhD [Organic Chemistry]",
+      experience: "0-5 Years",
+      overview:
+        "Join our synthetic team to build new molecules for serving a human being",
+      details: {
+        qualification: "M.Sc/PhD [Organic Chemistry]",
+        experience: "0-5 Years",
+        responsibilities: [
+          "Designing and Synthesizing Molecules: Creating new organic molecules often through multi-step synthesis.",
+          "Developing Synthetic Routes: Optimizing existing or developing new chemical processes for synthesizing target compounds, ensuring efficiency, scalability, and cost-effectiveness.",
+          "Troubleshooting: Investigating and resolving any issues that arise during the synthesis process.",
+          "Process Optimization: Continuously improving the efficiency, yield, and safety of chemical processes.",
+          "Purification and Characterization: Isolating and purifying synthesized compounds using chromatography and spectroscopy, and analyzing them using Mass, NMR, LCMS, and GCMS.",
+          "Literature Review: Staying up-to-date on the latest scientific literature and applying new techniques and methodologies.",
+          "Collaboration: Working with other scientists and external collaborators to achieve project goals.",
+          "Documentation & Reporting: Maintaining detailed records of experiments, writing reports, contributing to publications and patents.",
+        ],
+      },
+      applyText: "Apply Now",
     },
     {
-      id: 3,
-      title: "UX/UI Designer",
-      department: "Design",
-      location: "Remote",
-      type: "Full-time",
-      salary: "$90k - $130k",
-      experience: "3+ years",
-      description:
-        "Create beautiful and intuitive user experiences for our web and mobile applications.",
-      requirements: [
-        "3+ years of UX/UI design experience",
-        "Proficiency in Figma and design systems",
-        "Strong portfolio showcasing user-centered design",
-        "Understanding of accessibility principles",
-      ],
-      benefits: [
-        "Health Insurance",
-        "Remote Work",
-        "Design Budget",
-        "Conference Attendance",
-      ],
+      title: "Peptide Chemist",
+      qualification: "M.Sc/PhD [Organic Chemistry]",
+      experience: "0-5 Years",
+      overview:
+        "Join our synthetic team to build new molecules for serving a human being",
+      details: {
+        qualification: "M.Sc/PhD [Organic Chemistry]",
+        experience: "0-5 Years",
+        responsibilities:
+          "To synthesize peptides by solid-phase peptide synthesis (SPPS), solution-phase synthesis, and analyze the structure by analytical methods like HPLC and mass spectrometry, including development of new linker chemistries.",
+        keySkills: [
+          "Expert in Peptide Synthesis by SPPS and solution-phase synthesis",
+          "Analytical Characterization: Using HPLC, LCMS, NMR to determine peptide purity and structure",
+          "Process Development: Optimizing synthesis for scalability and efficiency",
+          "Conjugation Chemistry: Conjugating peptides to other molecules",
+          "Project Management: Collaborating in cross-functional teams to achieve project goals",
+        ],
+      },
+      applyText: "Apply Now",
     },
     {
-      id: 4,
-      title: "Data Scientist",
-      department: "Analytics",
-      location: "Austin, TX",
-      type: "Full-time",
-      salary: "$110k - $150k",
-      experience: "3+ years",
-      description:
-        "Analyze complex datasets to drive business insights and build predictive models.",
-      requirements: [
-        "3+ years of data science experience",
-        "Proficiency in Python and SQL",
-        "Experience with machine learning frameworks",
-        "Strong statistical analysis skills",
-      ],
-      benefits: [
-        "Health Insurance",
-        "401k Matching",
-        "Research Time",
-        "Flexible Hours",
-      ],
-    },
-    {
-      id: 5,
-      title: "Marketing Manager",
-      department: "Marketing",
-      location: "Los Angeles, CA",
-      type: "Full-time",
-      salary: "$85k - $115k",
-      experience: "4+ years",
-      description:
-        "Drive growth through innovative marketing campaigns and strategic partnerships.",
-      requirements: [
-        "4+ years of marketing experience",
-        "Experience with digital marketing channels",
-        "Strong analytical skills",
-        "Creative problem-solving abilities",
-      ],
-      benefits: [
-        "Health Insurance",
-        "Creative Budget",
-        "Flexible PTO",
-        "Growth Opportunities",
-      ],
-    },
-    {
-      id: 6,
-      title: "DevOps Engineer",
-      department: "Engineering",
-      location: "Seattle, WA",
-      type: "Full-time",
-      salary: "$130k - $170k",
-      experience: "4+ years",
-      description:
-        "Build and maintain our cloud infrastructure and deployment pipelines.",
-      requirements: [
-        "4+ years of DevOps experience",
-        "Experience with AWS/Azure/GCP",
-        "Knowledge of Docker and Kubernetes",
-        "Strong scripting skills",
-      ],
-      benefits: [
-        "Health Insurance",
-        "Stock Options",
-        "Remote Work",
-        "Tech Budget",
-      ],
+      title: "Analytical Chemist",
+      qualification: "B.Sc/M.Sc [Analytical Chemistry]",
+      experience: "0-3 Years",
+      overview:
+        "Join our Analytical team to build new molecules for serving a human being",
+      details: {
+        qualification: "B.Sc/M.Sc [Analytical Chemistry]",
+        experience: "0-3 Years",
+        responsibilities: [
+          "Sample Analysis: Performing qualitative and quantitative analysis using techniques like spectroscopy, HPLC, and GC-MS.",
+          "Method Development and Validation: Creating and validating methods for accuracy and reliability.",
+          "Data Interpretation and Reporting: Drawing insights and reporting experimental outcomes.",
+          "Quality Control: Ensuring products meet safety and quality standards.",
+          "Equipment Maintenance and Calibration: Ensuring lab instruments are accurate and functional.",
+        ],
+        keySkills: [
+          "Strong analytical and problem-solving skills",
+          "Proficiency in analytical techniques and instrumentation",
+          "Ability to work independently and collaboratively",
+          "Knowledge of safety protocols and regulatory compliance",
+        ],
+      },
+      applyText: "Apply Now",
     },
   ];
 
-  const departments = [
-    "All",
-    "Engineering",
-    "Product",
-    "Design",
-    "Analytics",
-    "Marketing",
-  ];
-  const locations = [
-    "All",
-    "San Francisco, CA",
-    "New York, NY",
-    "Remote",
-    "Austin, TX",
-    "Los Angeles, CA",
-    "Seattle, WA",
-  ];
+  // Removed departments section as per request
+  const locations = ["Nagpur"];
 
   const benefits = [
     {
@@ -246,17 +185,13 @@ const CareersPage = () => {
     },
   ];
 
-  // Filter jobs based on search and filters
+  // Filter jobs based on search and location only
   const filteredJobs = jobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.department.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDepartment =
-      selectedDepartment === "All" || job.department === selectedDepartment;
-    const matchesLocation =
-      selectedLocation === "All" || job.location === selectedLocation;
-
-    return matchesSearch && matchesDepartment && matchesLocation;
+    const matchesSearch = job.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesLocation = selectedLocation === "Nagpur" ? true : true;
+    return matchesSearch && matchesLocation;
   });
 
   const handleApply = (jobId) => {
@@ -280,10 +215,18 @@ const CareersPage = () => {
             who want to make a difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+            <button
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              onClick={() =>
+                openPositionsRef.current?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
               View Open Positions
             </button>
-            <button className="px-8 py-4 border-2 border-white/30 hover:bg-white/10 rounded-xl font-semibold text-lg transition-all duration-300">
+            <button
+              onClick={() => navigate("/company-profile")}
+              className="px-8 py-4 border-2 border-white/30 hover:bg-white/10 rounded-xl font-semibold text-lg transition-all duration-300"
+            >
               Learn About Our Culture
             </button>
           </div>
@@ -354,7 +297,7 @@ const CareersPage = () => {
       </div>
 
       {/* Jobs Section */}
-      <div className="py-20 bg-white">
+      <div ref={openPositionsRef} className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
@@ -394,25 +337,13 @@ const CareersPage = () => {
               }`}
             >
               <select
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {departments.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept === "All" ? "All Departments" : dept}
-                  </option>
-                ))}
-              </select>
-
-              <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
                 className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {locations.map((location) => (
                   <option key={location} value={location}>
-                    {location === "All" ? "All Locations" : location}
+                    {location}
                   </option>
                 ))}
               </select>
@@ -432,9 +363,9 @@ const CareersPage = () => {
                 </p>
               </div>
             ) : (
-              filteredJobs.map((job) => (
+              filteredJobs.map((job, idx) => (
                 <div
-                  key={job.id}
+                  key={idx}
                   className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 group"
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -444,50 +375,16 @@ const CareersPage = () => {
                           {job.title}
                         </h3>
                         <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                          {job.department}
+                          {job.qualification}
+                        </span>
+                        <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                          {job.experience}
                         </span>
                       </div>
-
-                      <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-4">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4" />
-                          <span>{job.location}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>{job.type}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4" />
-                          <span>{job.salary}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <GraduationCap className="w-4 h-4" />
-                          <span>{job.experience}</span>
-                        </div>
-                      </div>
-
                       <p className="text-gray-700 leading-relaxed mb-4">
-                        {job.description}
+                        {job.overview}
                       </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {job.benefits.slice(0, 3).map((benefit, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
-                          >
-                            {benefit}
-                          </span>
-                        ))}
-                        {job.benefits.length > 3 && (
-                          <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-                            +{job.benefits.length - 3} more
-                          </span>
-                        )}
-                      </div>
                     </div>
-
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
                       <button
                         onClick={() => setSelectedJob(job)}
@@ -497,10 +394,10 @@ const CareersPage = () => {
                         <ArrowRight className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleApply(job.id)}
+                        onClick={() => handleApply(idx)}
                         className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
                       >
-                        Apply Now
+                        {job.applyText || "Apply Now"}
                       </button>
                     </div>
                   </div>
@@ -526,66 +423,60 @@ const CareersPage = () => {
                 <X className="w-6 h-6" />
               </button>
             </div>
-
-            <div className="p-6">
-              <div className="flex flex-wrap items-center gap-4 mb-6">
+            <div className="p-6 space-y-6">
+              <div className="flex flex-wrap items-center gap-4 mb-4">
                 <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {selectedJob.department}
+                  {selectedJob.details.qualification}
                 </span>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin className="w-4 h-4" />
-                  <span>{selectedJob.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <DollarSign className="w-4 h-4" />
-                  <span>{selectedJob.salary}</span>
-                </div>
+                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                  {selectedJob.details.experience}
+                </span>
               </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Job Description
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Overview
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
-                  {selectedJob.description}
+                  {selectedJob.overview}
                 </p>
               </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Requirements
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Responsibilities
                 </h3>
-                <ul className="space-y-2">
-                  {selectedJob.requirements.map((req, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <Star className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700">{req}</span>
-                    </li>
-                  ))}
-                </ul>
+                {Array.isArray(selectedJob.details.responsibilities) ? (
+                  <ul className="list-disc pl-6 space-y-2">
+                    {selectedJob.details.responsibilities.map((resp, i) => (
+                      <li key={i} className="text-gray-700">
+                        {resp}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-700">
+                    {selectedJob.details.responsibilities}
+                  </p>
+                )}
               </div>
-
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Benefits
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedJob.benefits.map((benefit, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
-                    >
-                      {benefit}
-                    </span>
-                  ))}
+              {selectedJob.details.keySkills && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Key Skills
+                  </h3>
+                  <ul className="list-disc pl-6 space-y-2">
+                    {selectedJob.details.keySkills.map((skill, i) => (
+                      <li key={i} className="text-gray-700">
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
-
+              )}
               <button
-                onClick={() => handleApply(selectedJob.id)}
+                onClick={() => handleApply(selectedJob.title)}
                 className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
               >
-                Apply for This Position
+                {selectedJob.applyText || "Apply for This Position"}
               </button>
             </div>
           </div>
@@ -593,7 +484,7 @@ const CareersPage = () => {
       )}
 
       {/* CTA Section */}
-      <div className="py-20 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* <div className="py-20 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Join Our Team?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
@@ -604,7 +495,7 @@ const CareersPage = () => {
             Send Your Resume
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

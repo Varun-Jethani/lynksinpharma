@@ -74,15 +74,15 @@ const ProductModal = ({ product, onClose }) => (
             </div>
           </div>
 
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-100">
-        <div className="flex items-center justify-center h-50">
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            className="w-full h-full object-contain scale-125" 
-          />
-        </div>
-      </div>
+          <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-100">
+            <div className="flex items-center justify-center h-50">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-contain scale-125"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex gap-3">
@@ -188,8 +188,6 @@ export default function LifeScienceProductsCatalog() {
     return mapped.reverse();
   }, [searchHistory]);
 
-  
-
   const getStructureIcon = (index) => {
     const icons = [Atom, Beaker, FlaskConical];
     const Icon = icons[index % icons.length];
@@ -272,27 +270,6 @@ export default function LifeScienceProductsCatalog() {
     }
     // Only run when filteredProducts, userProfile, or searchTerm changes
   }, [filteredProducts, userProfile, searchTerm]);
-
-  if (!userProfile && !userLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
-        <div className="bg-white/90 rounded-3xl shadow-2xl p-10 text-center border border-white/50">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            Please log in to see the products
-          </h2>
-          <p className="text-gray-600 text-lg mb-6">
-            You must be logged in to view and request products.
-          </p>
-          <a
-            href="/auth"
-            className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
-          >
-            Login
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
@@ -401,9 +378,8 @@ export default function LifeScienceProductsCatalog() {
           </div>
         </div>
 
-        {(searchHistory.length > 0) && (
+        {searchHistory.length > 0 && (
           <div className="mt-8">
-            
             <RecentSearches
               searchHistory={mappedSearchHistory}
               onProductClick={handleViewProduct}
@@ -412,13 +388,18 @@ export default function LifeScienceProductsCatalog() {
               userCart={userProfile?.cart || []}
               onClearHistory={() => {
                 // Add API call to clear search history
-                axios.delete('/user/search/history/clear', {}, { withCredentials: true })
+                axios
+                  .delete(
+                    "/user/search/history/clear",
+                    {},
+                    { withCredentials: true }
+                  )
                   .then(() => dispatch(fetchSearchHistory()))
                   .catch(() => {});
               }}
               isVisible={mappedSearchHistory.length > 0}
             />
-        </div>
+          </div>
         )}
 
         {/* Enhanced Product Grid */}

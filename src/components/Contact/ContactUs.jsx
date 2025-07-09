@@ -114,7 +114,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Email</h3>
-                      <p className="text-gray-600">research@chempharm.com</p>
+                      <p className="text-gray-600">info@lynksinpharma.com</p>
                     </div>
                   </div>
 
@@ -167,7 +167,7 @@ const ContactUs = () => {
                         Laboratory
                       </h3>
                       <p className="text-gray-600">
-                        123 Research Blvd, Science City
+                        24, EWS, Ridge Road Colony QN 4/4, Nagpur-440027
                       </p>
                     </div>
                   </div>
@@ -177,11 +177,11 @@ const ContactUs = () => {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center shadow-lg">
-                  <div className="text-3xl font-bold mb-2">500+</div>
+                  <div className="text-3xl font-bold mb-2">50+</div>
                   <div className="text-blue-100">Compounds Analyzed</div>
                 </div>
                 <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white text-center shadow-lg">
-                  <div className="text-3xl font-bold mb-2">50+</div>
+                  <div className="text-3xl font-bold mb-2">5+</div>
                   <div className="text-green-100">Research Partners</div>
                 </div>
               </div>
@@ -263,14 +263,16 @@ const ContactUs = () => {
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
                   >
                     <option value="">Select a subject</option>
-                    <option value="Research Collaboration">
-                      Research Collaboration
+                    <option value="Research Collaboration">ADC-Linker</option>
+                    <option value="Compound Analysis">
+                      ADC- Linker + payload conjugate
                     </option>
-                    <option value="Compound Analysis">Compound Analysis</option>
                     <option value="Pharmaceutical Consultation">
-                      Pharmaceutical Consultation
+                      Peptides & Peptidomimetics
                     </option>
-                    <option value="Equipment Inquiry">Equipment Inquiry</option>
+                    <option value="Equipment Inquiry">
+                      Active Pharmaceautical Ingredient
+                    </option>
                     <option value="Technical Support">Technical Support</option>
                     <option value="Other">Other</option>
                   </select>

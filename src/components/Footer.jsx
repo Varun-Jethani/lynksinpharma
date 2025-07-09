@@ -39,7 +39,7 @@ const Footer = () => {
               <li>Custom Synthesis</li>
               <li>ADC Linkers</li>
               <li>Peptide Services</li>
-              <li>CRO & CDMO</li>
+              <li>CRO</li>
             </ul>
           </div>
 
@@ -62,7 +62,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2" />
-                +1 (555) 123-4567
+                +91 9422117461
               </div>
             </div>
           </div>

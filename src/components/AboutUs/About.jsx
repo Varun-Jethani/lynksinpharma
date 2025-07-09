@@ -262,9 +262,9 @@ const About = () => {
             >
               Contact Us Today
             </button>
-            <button className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-colors duration-300">
+            {/* <button className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-colors duration-300">
               Learn More
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
