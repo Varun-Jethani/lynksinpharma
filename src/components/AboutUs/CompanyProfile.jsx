@@ -16,6 +16,7 @@ import {
   Users,
   Award,
 } from "lucide-react";
+import Footer from "../Footer";
 
 const CompanyProfile = () => {
   const services = [
@@ -191,9 +192,7 @@ const CompanyProfile = () => {
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div>
                 <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                  Founded in{" "}
-                  <span className="font-bold text-blue-800">2025</span>, we
-                  specialize in the design, synthesis, and manufacturing of
+                  We specialize in the design, synthesis, and manufacturing of
                   <span className="font-semibold text-blue-800">
                     {" "}
                     ADC linkers
@@ -342,7 +341,7 @@ const CompanyProfile = () => {
       </div>
 
       {/* Global Outlook */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full -translate-x-48 -translate-y-48"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-48 translate-y-48"></div>
@@ -413,10 +412,10 @@ const CompanyProfile = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Footer CTA */}
-      <div className="bg-gradient-to-r from-slate-900 to-gray-900 text-white py-16">
+      {/* <div className="bg-gradient-to-r from-slate-900 to-gray-900 text-white py-16">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Partner with Us?
@@ -434,7 +433,8 @@ const CompanyProfile = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
+      <Footer />
     </div>
   );
 };

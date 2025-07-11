@@ -62,7 +62,7 @@ const Home = () => {
     }));
   }, [searchHistory]);
 
-  console.log("New Products:", newproducts);
+  // console.log("New Products:", newproducts);
 
   const heroSlides = [
     {
