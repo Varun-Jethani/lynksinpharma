@@ -19,10 +19,11 @@ import {
   FileText,
 } from "lucide-react";
 import { fetchCart } from "../../../store/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const cartState = useSelector((state) => state.cart) || {};
   const { items: cartItems = [], loading = false, error = null } = cartState;
   console.log("Cart items:", cartItems);
@@ -204,7 +205,10 @@ const Cart = () => {
             <p className="text-gray-600 mb-8 text-lg">
               Add some chemicals to request an inquiry!
             </p>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+            <button
+              onClick={() => navigate("/products")}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+            >
               Browse Chemicals
             </button>
           </div>

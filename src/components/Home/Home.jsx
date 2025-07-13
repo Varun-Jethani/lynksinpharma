@@ -17,8 +17,10 @@ import About from "./About";
 import Footer from "../Footer";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSearchHistory } from "../../../store/searchHistorySlice";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -29,28 +31,28 @@ const Home = () => {
     if (!searchHistory || searchHistory.length === 0)
       return [
         {
-          code: "LPS-0010",
-          name: "DBCO-acid",
-          cas: "1353016-70-2",
-          mw: "305.333",
+          code: "Fmoc-Val-Cit-PAB-PNP",
+          name: "Fmoc-Val-Cit-PAB-PNP",
+          cas: "863971-53-3",
+          mw: "766.8",
         },
         {
-          code: "LPS-0011",
+          code: "DBCO-amine",
+          name: "DBCO-amine",
+          cas: "1255942-06-3",
+          mw: "276.34",
+        },
+        {
+          code: "DBCO-NHS ester",
           name: "DBCO-NHS ester",
           cas: "1353016-71-3",
           mw: "402.4",
         },
         {
-          code: "LPS-0012",
-          name: "Mal-amido-(CH2COOH)2",
-          cas: "207613-14-7",
-          mw: "284.22",
-        },
-        {
-          code: "LPS-0013",
-          name: "Mal-PEG1-NHS ester",
-          cas: "1807518-72-4",
-          mw: "310.26",
+          code: "EMCS",
+          name: "EMCS",
+          cas: "55750-63-5",
+          mw: "308.29",
         },
       ];
     return searchHistory.map((item) => ({
@@ -247,7 +249,15 @@ const Home = () => {
                 </div>
 
                 {/* Inquiry Button */}
-                <button className="w-full py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <button
+                  className="w-full py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+                  onClick={() => {
+                    // Navigate to /products?chemicalName=product.name
+                    window.location.href = `/products?chemicalName=${encodeURIComponent(
+                      product.name
+                    )}`;
+                  }}
+                >
                   Inquiry
                 </button>
               </div>
@@ -255,7 +265,10 @@ const Home = () => {
           </div>
 
           <div className="text-center mt-12">
-            <button className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-colors inline-flex items-center shadow-lg hover:shadow-xl">
+            <button
+              onClick={() => navigate("/products")}
+              className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-colors inline-flex items-center shadow-lg hover:shadow-xl cursor-pointer"
+            >
               View Full Catalog
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>
@@ -264,25 +277,6 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-500 to-purple-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Accelerate Your Research?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Partner with us for innovative solutions in ADC development and
-            peptide synthesis
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors">
-              Request Quote
-            </button>
-            {/* <button className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
-              Schedule Consultation
-            </button> */}
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <Footer />

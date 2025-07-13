@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Search,
   MapPin,
@@ -19,6 +19,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCareers } from "../../../store/CareerSlice";
 
 const CareersPage = () => {
   const navigate = useNavigate();
@@ -29,98 +31,19 @@ const CareersPage = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const openPositionsRef = useRef(null);
 
-  // Sample job data
-  const jobs = [
-    {
-      title: "Synthetic Chemist",
-      qualification: "B.Sc/M.Sc [Organic Chemistry]",
-      experience: "0-3 Years",
-      overview:
-        "Join our synthetic team to build new molecules for serving a human being",
-      details: {
-        qualification: "B.Sc/M.Sc [Organic Chemistry]",
-        experience: "0-5 Years",
-        responsibilities:
-          "To synthesize and characterize new organic molecules. The work involves developing and optimizing synthetic routes, process development, scale-up, and troubleshooting.",
-        keySkills: [
-          "Designing and synthesizing new organic molecules",
-          "Developing and optimizing synthetic routes",
-          "Purifying and characterizing compounds",
-          "Maintaining detailed records and documentation",
-          "Presenting research findings",
-        ],
-      },
-      applyText: "Apply Now",
-    },
-    {
-      title: "Synthetic Chemist",
-      qualification: "M.Sc/PhD [Organic Chemistry]",
-      experience: "0-5 Years",
-      overview:
-        "Join our synthetic team to build new molecules for serving a human being",
-      details: {
-        qualification: "M.Sc/PhD [Organic Chemistry]",
-        experience: "0-5 Years",
-        responsibilities: [
-          "Designing and Synthesizing Molecules: Creating new organic molecules often through multi-step synthesis.",
-          "Developing Synthetic Routes: Optimizing existing or developing new chemical processes for synthesizing target compounds, ensuring efficiency, scalability, and cost-effectiveness.",
-          "Troubleshooting: Investigating and resolving any issues that arise during the synthesis process.",
-          "Process Optimization: Continuously improving the efficiency, yield, and safety of chemical processes.",
-          "Purification and Characterization: Isolating and purifying synthesized compounds using chromatography and spectroscopy, and analyzing them using Mass, NMR, LCMS, and GCMS.",
-          "Literature Review: Staying up-to-date on the latest scientific literature and applying new techniques and methodologies.",
-          "Collaboration: Working with other scientists and external collaborators to achieve project goals.",
-          "Documentation & Reporting: Maintaining detailed records of experiments, writing reports, contributing to publications and patents.",
-        ],
-      },
-      applyText: "Apply Now",
-    },
-    {
-      title: "Peptide Chemist",
-      qualification: "M.Sc/PhD [Organic Chemistry]",
-      experience: "0-5 Years",
-      overview:
-        "Join our synthetic team to build new molecules for serving a human being",
-      details: {
-        qualification: "M.Sc/PhD [Organic Chemistry]",
-        experience: "0-5 Years",
-        responsibilities:
-          "To synthesize peptides by solid-phase peptide synthesis (SPPS), solution-phase synthesis, and analyze the structure by analytical methods like HPLC and mass spectrometry, including development of new linker chemistries.",
-        keySkills: [
-          "Expert in Peptide Synthesis by SPPS and solution-phase synthesis",
-          "Analytical Characterization: Using HPLC, LCMS, NMR to determine peptide purity and structure",
-          "Process Development: Optimizing synthesis for scalability and efficiency",
-          "Conjugation Chemistry: Conjugating peptides to other molecules",
-          "Project Management: Collaborating in cross-functional teams to achieve project goals",
-        ],
-      },
-      applyText: "Apply Now",
-    },
-    {
-      title: "Analytical Chemist",
-      qualification: "B.Sc/M.Sc [Analytical Chemistry]",
-      experience: "0-3 Years",
-      overview:
-        "Join our Analytical team to build new molecules for serving a human being",
-      details: {
-        qualification: "B.Sc/M.Sc [Analytical Chemistry]",
-        experience: "0-3 Years",
-        responsibilities: [
-          "Sample Analysis: Performing qualitative and quantitative analysis using techniques like spectroscopy, HPLC, and GC-MS.",
-          "Method Development and Validation: Creating and validating methods for accuracy and reliability.",
-          "Data Interpretation and Reporting: Drawing insights and reporting experimental outcomes.",
-          "Quality Control: Ensuring products meet safety and quality standards.",
-          "Equipment Maintenance and Calibration: Ensuring lab instruments are accurate and functional.",
-        ],
-        keySkills: [
-          "Strong analytical and problem-solving skills",
-          "Proficiency in analytical techniques and instrumentation",
-          "Ability to work independently and collaboratively",
-          "Knowledge of safety protocols and regulatory compliance",
-        ],
-      },
-      applyText: "Apply Now",
-    },
-  ];
+  // Redux: fetch jobs from API
+  const dispatch = useDispatch();
+  const {
+    items: jobsRaw,
+    loading,
+    error,
+  } = useSelector((state) => state.career);
+  // Defensive: ensure jobs is always an array
+  const jobs = Array.isArray(jobsRaw) ? jobsRaw : [];
+
+  useEffect(() => {
+    dispatch(fetchCareers());
+  }, [dispatch]);
 
   // Removed departments section as per request
   const locations = ["Nagpur"];
@@ -216,7 +139,7 @@ const CareersPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
               onClick={() =>
                 openPositionsRef.current?.scrollIntoView({ behavior: "smooth" })
               }
@@ -225,7 +148,7 @@ const CareersPage = () => {
             </button>
             <button
               onClick={() => navigate("/company-profile")}
-              className="px-8 py-4 border-2 border-white/30 hover:bg-white/10 rounded-xl font-semibold text-lg transition-all duration-300"
+              className="px-8 py-4 border-2 border-white/30 hover:bg-white/10 rounded-xl font-semibold text-lg transition-all duration-300 cursor-pointer"
             >
               Learn About Our Culture
             </button>
@@ -386,13 +309,13 @@ const CareersPage = () => {
                       </p>
                     </div>
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-                      <button
+                      {/* <button
                         onClick={() => setSelectedJob(job)}
                         className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
                       >
                         View Details
                         <ArrowRight className="w-4 h-4" />
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => handleApply(idx)}
                         className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"

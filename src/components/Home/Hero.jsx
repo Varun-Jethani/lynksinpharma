@@ -47,6 +47,14 @@ const Hero = ({ heroSlides, setCurrentSlide, currentSlide }) => {
       })
     : [];
 
+  // Slide content logic
+  const slide =
+    Array.isArray(heroSlides) &&
+    heroSlides.length > 0 &&
+    typeof currentSlide === "number"
+      ? heroSlides[currentSlide]
+      : null;
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-gray-100 ">
       {/* Scientific Background Pattern */}
@@ -262,21 +270,25 @@ const Hero = ({ heroSlides, setCurrentSlide, currentSlide }) => {
           <div className="text-left">
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
               <Beaker className="h-4 w-4 mr-2" />
-              Pharmaceutical Innovation
+              {slide?.badge || "Pharmaceutical Innovation"}
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Leading ADC Linker Solutions
+              {slide?.title || "Leading ADC Linker Solutions"}
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-xl">
-              Innovative drug-linker conjugates for next-generation therapeutics
+              {slide?.subtitle ||
+                "Innovative drug-linker conjugates for next-generation therapeutics"}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 hover:shadow-lg transition-all duration-300 flex items-center justify-center group">
-                Explore Our Products
+                {slide?.primaryButton || "Explore Our Products"}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
-                View Product Catalog
+              <button
+                className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 cursor-pointer"
+                onClick={() => navigate("/products")}
+              >
+                {slide?.secondaryButton || "View Product Catalog"}
               </button>
             </div>
           </div>
@@ -380,15 +392,25 @@ const Hero = ({ heroSlides, setCurrentSlide, currentSlide }) => {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {[1, 2, 3].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide && setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${
-              index === (currentSlide || 0) ? "bg-blue-600" : "bg-gray-300"
-            }`}
-          />
-        ))}
+        {Array.isArray(heroSlides) && heroSlides.length > 0
+          ? heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide && setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${
+                  index === (currentSlide || 0) ? "bg-blue-600" : "bg-gray-300"
+                }`}
+              />
+            ))
+          : [1, 2, 3].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide && setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${
+                  index === (currentSlide || 0) ? "bg-blue-600" : "bg-gray-300"
+                }`}
+              />
+            ))}
       </div>
     </section>
   );
