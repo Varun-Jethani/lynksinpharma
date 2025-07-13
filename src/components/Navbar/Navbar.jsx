@@ -3,7 +3,7 @@ import { Menu, X, User, LogOut, ChevronDown, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../store/userSlice";
-import logoImg from "../../assets/lynksinlogo.png";
+import logoImg from "../../assets/lynksin Final Logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -139,19 +139,24 @@ const Navbar = () => {
             onClick={() => handleItemClick("Home")}
           >
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              {/* <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-white rounded-full flex items-center justify-center">
                   <span className="text-orange-500 font-bold text-sm sm:text-base lg:text-lg">
                     L
                   </span>
                 </div>
-              </div>
+              </div> */}
+              <img
+                src={logoImg}
+                alt="Lynksin Pharma Logo"
+                className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full object-cover"
+              />
               <div className="flex flex-col">
                 <span className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight">
-                  Lynskin Pharma
+                  Lynksin Pharma Solution
                 </span>
                 <span className="text-xs text-gray-400 hidden sm:block">
-                  Pharmaceutical Innovation
+                  Linking Life Science to Life Saving Innovations
                 </span>
               </div>
             </div>
