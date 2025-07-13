@@ -1,19 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Menu,
-  X,
+  Search,
+  Filter,
+  Star,
+  ChevronDown,
   ChevronRight,
   Beaker,
-  Users,
-  Award,
-  Zap,
   ArrowRight,
-  Mail,
-  Phone,
-  MapPin,
 } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts } from "../../../store/productsSlice";
+import { useNavigate } from "react-router-dom";
 
 const Hero = ({ heroSlides, setCurrentSlide, currentSlide }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Redux: fetch products from store
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {
+    items: products,
+    loading,
+    error,
+  } = useSelector((state) => state.products);
+  // console.log("Products:", products);
+  useEffect(() => {
+    if (!products || products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch]);
+
+  const filteredProducts = Array.isArray(products)
+    ? products.filter((product) => {
+        const matchesSearch =
+          product.ChemicalName?.toLowerCase().includes(
+            searchQuery.toLowerCase()
+          ) ||
+          product.description
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase());
+        const matchesCategory =
+          selectedCategory === "all" || product.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      })
+    : [];
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-gray-100 ">
       {/* Scientific Background Pattern */}
@@ -248,191 +281,98 @@ const Hero = ({ heroSlides, setCurrentSlide, currentSlide }) => {
             </div>
           </div>
 
-          {/* Visual Side */}
+          {/* Visual Side - Compact Product Search */}
           <div className="relative">
-            {/* Main Illustration Container */}
-            <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
-              {/* Large Central Molecule */}
-              <div className="flex justify-center mb-6">
-                <svg
-                  width="280"
-                  height="200"
-                  viewBox="0 0 280 200"
-                  className="drop-shadow-sm"
+            {/* Compact Search Container */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 max-w-lg">
+              {/* Search Input */}
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                />
+              </div>
+
+              {/* Single Product Result */}
+              {loading ? (
+                <div className="text-center py-4 text-gray-500">Loading...</div>
+              ) : error ? (
+                <div className="text-center py-4 text-red-500">
+                  {error.toString()}
+                </div>
+              ) : filteredProducts.length > 0 ? (
+                <div
+                  className="p-3 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all duration-200 cursor-pointer group"
+                  onClick={() => {
+                    // Navigate to products page and pass the ChemicalName as a query param for modal open
+                    navigate(
+                      `/products?chemicalName=${encodeURIComponent(
+                        filteredProducts[0].ChemicalName ||
+                          filteredProducts[0].name ||
+                          ""
+                      )}`
+                    );
+                  }}
                 >
-                  {/* DBCO-acid structure representation */}
-                  <g className="animate-pulse">
-                    {/* Ring structures */}
-                    <circle
-                      cx="60"
-                      cy="100"
-                      r="12"
-                      fill="#1e40af"
-                      stroke="#1e40af"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="120"
-                      cy="80"
-                      r="10"
-                      fill="#6b7280"
-                      stroke="#374151"
-                      strokeWidth="1"
-                    />
-                    <circle
-                      cx="120"
-                      cy="120"
-                      r="10"
-                      fill="#6b7280"
-                      stroke="#374151"
-                      strokeWidth="1"
-                    />
-                    <circle
-                      cx="180"
-                      cy="100"
-                      r="12"
-                      fill="#dc2626"
-                      stroke="#dc2626"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="240"
-                      cy="80"
-                      r="8"
-                      fill="#059669"
-                      stroke="#059669"
-                      strokeWidth="1"
-                    />
-                    <circle
-                      cx="240"
-                      cy="120"
-                      r="8"
-                      fill="#059669"
-                      stroke="#059669"
-                      strokeWidth="1"
-                    />
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors text-sm">
+                        {filteredProducts[0].ChemicalName ||
+                          filteredProducts[0].name}
+                      </h4>
+                      <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                        {filteredProducts[0].description}
+                      </p>
+                      <div className="flex items-center mt-2">
+                        <div className="flex items-center mr-3">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current" />
+                          <span className="text-xs text-gray-600 ml-1">
+                            {filteredProducts[0].rating || "-"}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            filteredProducts[0].availability === "In Stock"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-orange-100 text-orange-800"
+                          }`}
+                        >
+                          {filteredProducts[0].availability || "Available"}
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors ml-2" />
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-4 text-gray-500">
+                  <Search className="h-6 w-6 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No products found</p>
+                </div>
+              )}
 
-                    {/* Bonds */}
-                    <line
-                      x1="72"
-                      y1="100"
-                      x2="108"
-                      y2="80"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="72"
-                      y1="100"
-                      x2="108"
-                      y2="120"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="132"
-                      y1="80"
-                      x2="168"
-                      y2="100"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="132"
-                      y1="120"
-                      x2="168"
-                      y2="100"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="192"
-                      y1="100"
-                      x2="228"
-                      y2="80"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="192"
-                      y1="100"
-                      x2="228"
-                      y2="120"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
-                    <line
-                      x1="120"
-                      y1="90"
-                      x2="120"
-                      y2="110"
-                      stroke="#374151"
-                      strokeWidth="3"
-                    />
+              {/* Show count if multiple results */}
+              {filteredProducts.length > 1 && (
+                <div className="mt-3 text-center">
+                  <span className="text-xs text-gray-500">
+                    +{filteredProducts.length - 1} more results
+                  </span>
+                </div>
+              )}
 
-                    {/* Labels */}
-                    <text
-                      x="60"
-                      y="135"
-                      textAnchor="middle"
-                      className="text-xs font-medium fill-gray-700"
-                    >
-                      N
-                    </text>
-                    <text
-                      x="120"
-                      y="75"
-                      textAnchor="middle"
-                      className="text-xs font-medium fill-gray-700"
-                    >
-                      C
-                    </text>
-                    <text
-                      x="180"
-                      y="135"
-                      textAnchor="middle"
-                      className="text-xs font-medium fill-gray-700"
-                    >
-                      O
-                    </text>
-                    <text
-                      x="240"
-                      y="75"
-                      textAnchor="middle"
-                      className="text-xs font-medium fill-gray-700"
-                    >
-                      H
-                    </text>
-                  </g>
-                </svg>
+              {/* Compact Action */}
+              <div className="mt-4">
+                <button
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  onClick={() => navigate("/products")}
+                >
+                  View All Products
+                </button>
               </div>
-
-              {/* Chemical Properties */}
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <div className="text-lg font-bold text-blue-600">99.5%</div>
-                  <div className="text-xs text-gray-600">Purity</div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-lg font-bold text-gray-700">305.33</div>
-                  <div className="text-xs text-gray-600">Mol. Weight</div>
-                </div>
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <div className="text-lg font-bold text-green-600">ADC</div>
-                  <div className="text-xs text-gray-600">Linker</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Elements */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-lg p-3 border border-gray-200 opacity-90">
-              <div className="text-xs text-gray-500">CAS No.</div>
-              <div className="font-bold text-gray-800">1353016-70-2</div>
-            </div>
-
-            <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-lg p-3 border border-gray-200 opacity-90">
-              <div className="text-xs text-gray-500">Catalog</div>
-              <div className="font-bold text-gray-800">LPS-0010</div>
             </div>
           </div>
         </div>

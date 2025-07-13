@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
@@ -85,7 +86,7 @@ const ProductModal = ({ product, onClose }) => (
           </div>
         </div>
 
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-semibold shadow-lg">
             Request Quote
           </button>
@@ -93,13 +94,14 @@ const ProductModal = ({ product, onClose }) => (
             <ExternalLink size={18} />
             View Details
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   </div>
 );
 
 export default function LifeScienceProductsCatalog() {
+  const location = useLocation();
   const dispatch = useDispatch();
   const {
     items: products,
@@ -113,6 +115,14 @@ export default function LifeScienceProductsCatalog() {
   const [sortBy, setSortBy] = useState("catalog");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  // If chemicalName query param is present, set searchTerm to it
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const chemicalName = params.get("chemicalName");
+    if (chemicalName) {
+      setSearchTerm(decodeURIComponent(chemicalName));
+    }
+  }, [location.search]);
   const [cartUpdateLoading, setCartUpdateLoading] = useState(false);
   console.log("Search History:", searchHistory);
 
