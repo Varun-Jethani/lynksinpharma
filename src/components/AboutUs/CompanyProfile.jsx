@@ -130,7 +130,7 @@ const CompanyProfile = () => {
           <div className="text-center">
             <div className="inline-flex items-center bg-blue-500/10 border border-blue-400/30 rounded-full px-6 py-2 mb-8">
               <span className="text-blue-300 font-medium">
-                Technology-Driven CRO & CDMO
+                Technology-Driven CRO
               </span>
             </div>
 
@@ -184,7 +184,7 @@ const CompanyProfile = () => {
                   Lynksin Pharma Solutions Pvt. Ltd.
                 </h2>
                 <p className="text-blue-600 font-semibold text-lg">
-                  Technology-Driven CRO & CDMO
+                  Technology-Driven CRO
                 </p>
               </div>
             </div>
