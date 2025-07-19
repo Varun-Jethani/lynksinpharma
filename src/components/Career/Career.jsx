@@ -123,23 +123,35 @@ const CareersPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-
-        <div className="relative max-w-6xl mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+      <div className="bg-white py-20">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8">
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-blue-600">
             Join Our Amazing Team
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Build the future with us. We're looking for passionate individuals
             who want to make a difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+              className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-lg transition-all duration-300 cursor-pointer"
               onClick={() =>
                 openPositionsRef.current?.scrollIntoView({ behavior: "smooth" })
               }
@@ -148,14 +160,14 @@ const CareersPage = () => {
             </button>
             <button
               onClick={() => navigate("/company-profile")}
-              className="px-8 py-4 border-2 border-white/30 hover:bg-white/10 rounded-xl font-semibold text-lg transition-all duration-300 cursor-pointer"
+              className="px-8 py-4 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl font-semibold text-lg transition-all duration-300 cursor-pointer"
             >
               Learn About Our Culture
             </button>
           </div>
         </div>
       </div>
-
+      <div className="w-full h-0.5 bg-black"></div>
       {/* Company Values */}
       <div className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -188,7 +200,7 @@ const CareersPage = () => {
       </div>
 
       {/* Benefits Section */}
-      <div className="py-20 bg-gradient-to-r from-blue-50 to-purple-50">
+      <div className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
@@ -309,16 +321,16 @@ const CareersPage = () => {
                       </p>
                     </div>
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-                      {/* <button
+                      <button
                         onClick={() => setSelectedJob(job)}
                         className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
                       >
                         View Details
                         <ArrowRight className="w-4 h-4" />
-                      </button> */}
+                      </button>
                       <button
                         onClick={() => handleApply(idx)}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 font-semibold"
                       >
                         {job.applyText || "Apply Now"}
                       </button>
@@ -348,46 +360,54 @@ const CareersPage = () => {
             </div>
             <div className="p-6 space-y-6">
               <div className="flex flex-wrap items-center gap-4 mb-4">
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {selectedJob.details.qualification}
-                </span>
-                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                  {selectedJob.details.experience}
-                </span>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Overview
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  {selectedJob.overview}
-                </p>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Responsibilities
-                </h3>
-                {Array.isArray(selectedJob.details.responsibilities) ? (
-                  <ul className="list-disc pl-6 space-y-2">
-                    {selectedJob.details.responsibilities.map((resp, i) => (
-                      <li key={i} className="text-gray-700">
-                        {resp}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-700">
-                    {selectedJob.details.responsibilities}
-                  </p>
+                {selectedJob.degree && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    {selectedJob.degree}
+                  </span>
+                )}
+                {selectedJob.experience && (
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                    {selectedJob.experience}
+                  </span>
                 )}
               </div>
-              {selectedJob.details.keySkills && (
+              {selectedJob.overview && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Overview
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    {selectedJob.overview}
+                  </p>
+                </div>
+              )}
+              {selectedJob.responsibilities && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Responsibilities
+                  </h3>
+                  {Array.isArray(selectedJob.responsibilities) ? (
+                    <ul className="list-disc pl-6 space-y-2">
+                      {selectedJob.responsibilities.map((resp, i) => (
+                        <li key={i} className="text-gray-700">
+                          {resp}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-700">
+                      {selectedJob.responsibilities}
+                    </p>
+                  )}
+                </div>
+              )}
+              {selectedJob.skills && (
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     Key Skills
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
-                    {selectedJob.details.keySkills.map((skill, i) => (
+                    {selectedJob.skills.map((skill, i) => (
                       <li key={i} className="text-gray-700">
                         {skill}
                       </li>
@@ -397,7 +417,7 @@ const CareersPage = () => {
               )}
               <button
                 onClick={() => handleApply(selectedJob.title)}
-                className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
+                className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 font-semibold text-lg"
               >
                 {selectedJob.applyText || "Apply for This Position"}
               </button>

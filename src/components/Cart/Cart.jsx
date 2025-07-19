@@ -183,7 +183,10 @@ const Cart = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors duration-200 mb-4">
+            <button
+              onClick={() => navigate("/products")}
+              className="flex cursor-pointer items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors duration-200 mb-4"
+            >
               <ArrowLeft size={20} />
               Continue Shopping
             </button>
@@ -222,7 +225,7 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors duration-200 mb-4">
+          <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors duration-200 mb-4 cursor-pointer">
             <ArrowLeft size={20} />
             Continue Shopping
           </button>

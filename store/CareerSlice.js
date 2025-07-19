@@ -8,6 +8,7 @@ export const fetchCareers = createAsyncThunk(
     try {
       const response = await axios.get("/career");
       //   console.log("Fetched careers:", response.data.message); // Debugging log
+      console.log(response.data.message);
       return response.data.message;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
