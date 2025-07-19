@@ -62,11 +62,11 @@ const CompanyProfile = () => {
       gradient: "from-blue-500 to-cyan-500",
     },
     {
-      icon: <Microscope className="w-8 h-8" />,
-      title: "Medicinal Chemistry",
+      icon: <Beaker className="w-8 h-8" />,
+      title: "Peptide synthesis",
       description:
-        "Structure-based drug discovery, lead optimization, and IND-enabling compounds",
-      gradient: "from-purple-500 to-pink-500",
+        "Solid-phase and solution-phase synthesis, including complex cyclic peptides",
+      gradient: "from-red-500 to-blue-500",
     },
     {
       icon: <Dna className="w-8 h-8" />,
@@ -83,12 +83,13 @@ const CompanyProfile = () => {
       gradient: "from-orange-500 to-red-500",
     },
     {
-      icon: <Beaker className="w-8 h-8" />,
-      title: "Peptide synthesis",
+      icon: <Microscope className="w-8 h-8" />,
+      title: "Medicinal Chemistry",
       description:
-        "Solid-phase and solution-phase synthesis, including complex cyclic peptides",
-      gradient: "from-red-500 to-blue-500",
+        "Structure-based drug discovery, lead optimization, and IND-enabling compounds",
+      gradient: "from-purple-500 to-pink-500",
     },
+    
   ];
 
   const advantages = [
