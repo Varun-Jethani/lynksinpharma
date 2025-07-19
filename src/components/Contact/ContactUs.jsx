@@ -136,7 +136,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Phone</h3>
-                      <p className="text-gray-600">+91 9745377123</p>
+                      <p className="text-gray-600">+91 9422117461</p>
                     </div>
                   </div>
 
@@ -164,7 +164,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">
-                        Laboratory
+                        Address
                       </h3>
                       <p className="text-gray-600">
                         24, EWS, Ridge Road Colony QN 4/4, Nagpur-440027
@@ -274,6 +274,8 @@ const ContactUs = () => {
                       Active Pharmaceautical Ingredient
                     </option>
                     <option value="Technical Support">Technical Support</option>
+                    <option value="API Intermediate">API Intermediate</option>
+                    <option value="Clinical Research Support">Clinical Research Support</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>

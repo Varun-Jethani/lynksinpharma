@@ -149,16 +149,17 @@ const Navbar = () => {
               <img
                 src={logoImg}
                 alt="Lynksin Pharma Logo"
-                className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full object-cover"
+                className="w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-full object-cover"
               />
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight">
-                  Lynksin Pharma Solution
-                </span>
-                <span className="text-xs text-gray-400 hidden sm:block">
-                  Linking Life Science to Life Saving Innovations
-                </span>
-              </div>
+              
+<div className="flex flex-col">
+  <span className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-100 font-[Poppins]">
+    Lynksin Pharma Solutions
+  </span>
+  <span className="text-medium -mt-1.5 text-slate-300 hidden sm:block font-light">
+    Linking Science to Life Saving Innovations
+  </span>
+</div>
             </div>
           </div>
 
