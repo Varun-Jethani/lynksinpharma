@@ -45,7 +45,7 @@ const About = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Pioneering Chemical Solutions
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+              <p className="text-lg text-gray-700 leading-relaxed mb-6 text-justify">
                 We specialize in the research, development, and supply of
                 <span className="font-semibold text-blue-800">
                   {" "}
@@ -63,7 +63,7 @@ const About = () => {
                 </span>{" "}
                 tailored for both pharmaceutical and biotech industries.
               </p>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-lg text-gray-700 leading-relaxed text-justify">
                 As a comprehensive{" "}
                 <span className="font-semibold text-indigo-800">
                   CRO (Contract Research Organization)
@@ -82,7 +82,7 @@ const About = () => {
                   <h3 className="text-xl font-bold text-center text-gray-900 mb-2">
                     One-Stop Platform
                   </h3>
-                  <p className="text-gray-600 text-center">
+                  <p className="text-gray-600 text-justify">
                     Empowering your scientific goals with precision, quality,
                     and cutting-edge technology.
                   </p>
@@ -104,7 +104,7 @@ const About = () => {
               </div>
               <h2 className="text-2xl font-bold">Our History</h2>
             </div>
-            <p className="text-blue-100 leading-relaxed">
+            <p className="text-blue-100 leading-relaxed text-justify">
               Lynksin Pharma Solutions emerged with a mission to bridge the gap
               between drug innovation and scalable chemical development. From
               humble beginnings in Nagpur, India, we've grown into a dynamic
@@ -121,7 +121,7 @@ const About = () => {
               </div>
               <h2 className="text-2xl font-bold">Our Culture</h2>
             </div>
-            <p className="text-indigo-100 leading-relaxed">
+            <p className="text-indigo-100 leading-relaxed text-justify">
               We foster a culture of{" "}
               <span className="font-semibold">
                 scientific excellence, client collaboration, and continuous
@@ -147,7 +147,7 @@ const About = () => {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
               </div>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-justify">
                 To support our partners' research and development of{" "}
                 <span className="font-semibold text-blue-800">
                   innovative treatments
@@ -184,7 +184,7 @@ const About = () => {
                   Our Mission
                 </h2>
               </div>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-justify">
                 To offer{" "}
                 <span className="font-semibold text-indigo-800">
                   lifetime support with quality assurance

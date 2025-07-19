@@ -191,7 +191,7 @@ const CompanyProfile = () => {
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div>
-                <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                <p className="text-lg text-gray-700 leading-relaxed mb-4 text-justify">
                   We specialize in the design, synthesis, and manufacturing of
                   <span className="font-semibold text-blue-800">
                     {" "}
@@ -206,7 +206,7 @@ const CompanyProfile = () => {
                   <span className="font-semibold text-blue-800"> peptides</span>
                   , serving pharmaceutical and biotech clients globally.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 leading-relaxed text-justify">
                   Headquartered in{" "}
                   <span className="font-semibold text-indigo-800">
                     Nagpur, India

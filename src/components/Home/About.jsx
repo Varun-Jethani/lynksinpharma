@@ -33,7 +33,7 @@ const About = ({ Award }) => {
                 <Award className="h-6 w-6 text-blue-500 mr-3" />
                 Our Vision
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 text-justify leading-relaxed">
                 To support our partners' research and development of innovative
                 treatments by providing high-quality goods and services founded
                 on technology advancement and scientific innovation. We aim to
@@ -45,7 +45,7 @@ const About = ({ Award }) => {
                 <Zap className="h-6 w-6 text-purple-500 mr-3" />
                 Our Mission
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 text-justify leading-relaxed">
                 To offer lifetime support with high quality assurance by
                 providing affordable and optimized solutions in the development
                 of new therapeutics based on innovative technology platforms.
