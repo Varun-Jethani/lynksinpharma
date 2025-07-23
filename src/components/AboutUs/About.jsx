@@ -19,7 +19,7 @@ const About = () => {
             <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
               Welcome to{" "}
               <span className="font-bold text-white">
-                Lynksin Pharma Pvt. Ltd.
+                Lynksin Pharma Solutions Pvt. Ltd.
               </span>
               , your trusted partner in advancing life sciences through
               innovative chemical solutions.
