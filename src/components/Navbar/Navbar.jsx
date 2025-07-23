@@ -146,11 +146,13 @@ const Navbar = () => {
                   </span>
                 </div>
               </div> */}
+              <div className="flex items-center space-x-2 bg-white rounded-lg  shadow-lg">
               <img
                 src={logoImg}
                 alt="Lynksin Pharma Logo"
                 className="w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-full object-cover"
-              />
+                />
+              </div>  
               
 <div className="flex flex-col">
   <span className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-100 font-[Poppins]">
