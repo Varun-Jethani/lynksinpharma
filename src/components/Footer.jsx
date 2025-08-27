@@ -12,7 +12,9 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,11 +47,11 @@ const Footer = () => {
 
           <div>
             <h3 className="font-semibold mb-4">Company</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>About Us</li>
-              <li>Quality & Compliance</li>
-              <li>Careers</li>
-              <li>Contact</li>
+            <ul className="space-y-2 text-sm text-gray-400 cursor-pointer">
+              <li onClick={() => navigate("/about-us")}>About Us</li>
+              <li onClick={() => navigate("/products")}>Products</li>
+              <li onClick={() => navigate("/Careers")}>Careers</li>
+              <li onClick={() => navigate("/contact-us")}>Contact Us</li>
             </ul>
           </div>
 

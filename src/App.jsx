@@ -31,12 +31,12 @@ const App = () => {
   axios.defaults.withCredentials = true;
 
   const GoogleAuthwrapper = () => {
-    return(
+    return (
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <AuthPage/>
+        <AuthPage />
       </GoogleOAuthProvider>
-    )
-  }
+    );
+  };
 
   return (
     <BrowserRouter>
@@ -50,7 +50,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/Careers" element={<CareersPage />} />
+        <Route path="/careers" element={<CareersPage />} />
       </Routes>
     </BrowserRouter>
   );
