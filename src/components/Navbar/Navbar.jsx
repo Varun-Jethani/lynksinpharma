@@ -156,9 +156,9 @@ const Navbar = () => {
 
               <div className="flex flex-col min-w-0">
                 <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-slate-100 font-[Poppins] truncate">
-                  <span className="inline sm:hidden">Lynksin</span>
+                  <span className="sm:hidden">Lynksin Pharma <br />Solutions</span>
                   <span className="hidden sm:inline md:hidden">
-                    Lynksin Pharma
+                    Lynksin Pharma Solutions
                   </span>
                   <span className="hidden md:inline">
                     Lynksin Pharma Solutions
