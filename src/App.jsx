@@ -31,7 +31,6 @@ const App = () => {
   axios.defaults.withCredentials = true;
 
   const GoogleAuthwrapper = () => {
-    console.log(GOOGLE_CLIENT_ID)
     return (
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <AuthPage />
