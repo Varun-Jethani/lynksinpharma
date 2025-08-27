@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const ContactUs = () => {
@@ -32,8 +34,10 @@ const ContactUs = () => {
       await axios.post("/contactus", payload);
       setSubmitStatus("success");
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      toast.success("Message sent successfully! We'll get back to you soon.");
     } catch (error) {
       setSubmitStatus("error");
+      toast.error("There was an error sending your message. Please try again.");
       console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
@@ -42,6 +46,18 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 relative overflow-hidden">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       {/* Scientific Background Elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 w-32 h-32 border-2 border-blue-400 rounded-full"></div>
@@ -163,9 +179,7 @@ const ContactUs = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">
-                        Address
-                      </h3>
+                      <h3 className="font-semibold text-gray-800">Address</h3>
                       <p className="text-gray-600">
                         24, EWS, Ridge Road Colony QN 4/4, Nagpur-440027
                       </p>
@@ -205,7 +219,7 @@ const ContactUs = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="Dr. John Smith"
+                    placeholder="Dr. Ashish Kumar"
                   />
                 </div>
 
@@ -224,7 +238,7 @@ const ContactUs = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="john.smith@university.edu"
+                    placeholder="Ashish.kumar@university.edu"
                   />
                 </div>
 
@@ -243,7 +257,7 @@ const ContactUs = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="+91 9745377123"
+                    placeholder="9745377123"
                   />
                 </div>
 
@@ -275,7 +289,9 @@ const ContactUs = () => {
                     </option>
                     <option value="Technical Support">Technical Support</option>
                     <option value="API Intermediate">API Intermediate</option>
-                    <option value="Clinical Research Support">Clinical Research Support</option>
+                    <option value="Clinical Research Support">
+                      Clinical Research Support
+                    </option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
@@ -295,7 +311,7 @@ const ContactUs = () => {
                     value={formData.message}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70 resize-none"
-                    placeholder="Tell us about your research project, questions, or how we can collaborate..."
+                    placeholder="Tell us about your research project, questions, or how we can collaborate...(Message must be between 5 & 1000 characters)"
                   ></textarea>
                 </div>
 

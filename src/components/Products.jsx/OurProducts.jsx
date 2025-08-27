@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -216,11 +218,11 @@ export default function LifeScienceProductsCatalog() {
         },
         { withCredentials: true }
       );
-      alert("Product added to cart!");
+      toast.success("Product added to cart!");
       // Refresh user profile to update cart
       dispatch(fetchUserProfile());
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to add product to cart.");
+      toast.error("Please Login to add items to cart.");
     } finally {
       setCartUpdateLoading(false);
     }
@@ -241,7 +243,7 @@ export default function LifeScienceProductsCatalog() {
       // Refresh user profile to update cart
       dispatch(fetchUserProfile());
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to update cart.");
+      toast.error(error.response?.data?.message || "Failed to update cart.");
     } finally {
       setCartUpdateLoading(false);
     }
@@ -283,6 +285,18 @@ export default function LifeScienceProductsCatalog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       {/* Loading/Error States */}
       {loading && (
         <div className="text-center py-10 text-xl text-blue-600 font-bold">

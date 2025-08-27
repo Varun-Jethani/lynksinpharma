@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Menu, X, User, LogOut, ChevronDown, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +9,7 @@ import logoImg from "../../assets/lynksin Final Logo.png";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
+  const location = useLocation();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
@@ -81,17 +83,35 @@ const Navbar = () => {
 
   const handleItemClick = (item, path = null) => {
     const routePath = path || `/${item.toLowerCase().replace(/ /g, "-")}`;
-
     if (item.toLowerCase() === "home") {
       navigate("/");
     } else {
       navigate(routePath);
     }
-
     setActiveItem(item);
     setIsMenuOpen(false);
     setOpenDropdown(null);
   };
+
+  // Sync activeItem with current route
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === "/" || path === "") {
+      setActiveItem("Home");
+    } else if (path.startsWith("/about-us")) {
+      setActiveItem("About");
+    } else if (path.startsWith("/company-profile")) {
+      setActiveItem("About");
+    } else if (path.startsWith("/products")) {
+      setActiveItem("Products");
+    } else if (path.startsWith("/contact-us")) {
+      setActiveItem("Contact Us");
+    } else if (path.startsWith("/careers")) {
+      setActiveItem("Careers");
+    } else {
+      setActiveItem("");
+    }
+  }, [location.pathname]);
 
   const handleDropdownToggle = (dropdownName) => {
     // On mobile, toggle open/close; on desktop, open only
