@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import {
@@ -56,7 +58,7 @@ const Cart = () => {
       );
       dispatch(fetchCart());
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update quantity.");
+      toast.error(err.response?.data?.message || "Failed to update quantity.");
     }
   };
 
@@ -68,7 +70,7 @@ const Cart = () => {
       });
       dispatch(fetchCart());
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to remove item.");
+      toast.error(err.response?.data?.message || "Failed to remove item.");
     }
   };
 
@@ -135,7 +137,9 @@ const Cart = () => {
           })),
         };
         await axios.post("/order", orderPayload, { withCredentials: true });
-        alert("Order created successfully! Our team will contact you soon.");
+        toast.success(
+          "Order created successfully! Our team will contact you soon."
+        );
         setShowModal(false);
         setFormData({
           name: "",
@@ -147,7 +151,7 @@ const Cart = () => {
         });
         dispatch(fetchCart()); // Refresh cart after order
       } catch (err) {
-        alert(
+        toast.error(
           err.response?.data?.message ||
             "Failed to create order. Please try again."
         );
@@ -222,6 +226,18 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

@@ -20,6 +20,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user.profile) || {};
   const orders = useSelector((state) => state.userOrders.orders) || [];
+  console.log("User Data:", orders);
   const userLoading = useSelector((state) => state.user.loading);
   const ordersLoading = useSelector((state) => state.userOrders.loading);
   const [activeTab, setActiveTab] = useState("profile");
@@ -299,48 +300,61 @@ const Profile = () => {
                         <p className="text-sm font-medium text-gray-700 mb-2">
                           Products:
                         </p>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-4">
                           {(order.products || order.items || []).map(
-                            (product, idx) => {
-                              // Support both string and object product
-                              let label = "";
-                              let key = idx;
-                              if (typeof product === "string") {
-                                label = product;
-                                key = product + idx;
-                              } else if (
-                                product &&
-                                typeof product === "object"
-                              ) {
-                                // Try to use product.product.ChemicalName or product.product.name or fallback
-                                label =
-                                  product.product?.ChemicalName ||
-                                  product.product?.name ||
-                                  product.name ||
-                                  product.CatelogNumber ||
-                                  product._id ||
-                                  "Product";
-                                key =
-                                  product._id || product.product?._id || idx;
-                              }
+                            (item, idx) => {
+                              let prod = item.product ? item.product : item;
+                              let quantity =
+                                item.quantity || prod.quantity || 1;
                               return (
-                                <span
-                                  key={key}
-                                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                                <div
+                                  key={prod._id || idx}
+                                  className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col items-center w-64 min-h-[180px]"
                                 >
-                                  {label}
-                                </span>
+                                  {prod.Image && (
+                                    <img
+                                      src={prod.Image}
+                                      alt={
+                                        prod.ChemicalName ||
+                                        prod.name ||
+                                        "Product"
+                                      }
+                                      className="w-20 h-20 object-contain rounded-lg border mb-2"
+                                    />
+                                  )}
+                                  <div className="w-full text-center">
+                                    <div className="font-semibold text-gray-900 text-base mb-1">
+                                      {prod.ChemicalName ||
+                                        prod.name ||
+                                        "Product"}
+                                    </div>
+                                    <div className="text-sm text-gray-700 mb-1">
+                                      Catalog #:{" "}
+                                      <span className="font-medium">
+                                        {prod.CatelogNumber || "N/A"}
+                                      </span>
+                                    </div>
+                                    <div className="text-sm text-gray-700 mb-1">
+                                      CAS #:{" "}
+                                      <span className="font-medium">
+                                        {prod.CASNumber || "N/A"}
+                                      </span>
+                                    </div>
+                                    <div className="text-sm text-gray-700">
+                                      Quantity:{" "}
+                                      <span className="font-medium">
+                                        {quantity}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
                               );
                             }
                           )}
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between mt-4">
-                        <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          <Eye className="w-4 h-4" />
-                          View Details
-                        </button>
+                      <div className="flex items-center justify-end mt-4">
                         {order.status === "Delivered" && (
                           <button className="flex items-center gap-2 text-yellow-600 hover:text-yellow-700 text-sm font-medium">
                             <Star className="w-4 h-4" />
