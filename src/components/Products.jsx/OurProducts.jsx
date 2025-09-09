@@ -207,7 +207,7 @@ export default function LifeScienceProductsCatalog() {
   };
 
   // Add to cart handler (for new items)
-  const handleAddToCart = async (product, quantity) => {
+  const handleAddToCart = async (product, quantity, unit) => {
     try {
       setCartUpdateLoading(true);
       await axios.post(
@@ -215,6 +215,7 @@ export default function LifeScienceProductsCatalog() {
         {
           productId: product._id,
           quantity,
+          unit,
         },
         { withCredentials: true }
       );
@@ -229,7 +230,7 @@ export default function LifeScienceProductsCatalog() {
   };
 
   // Update cart quantity handler (for existing cart items)
-  const handleUpdateCart = async (productId, quantity) => {
+  const handleUpdateCart = async (productId, quantity, unit) => {
     try {
       setCartUpdateLoading(true);
       await axios.post(
@@ -237,6 +238,7 @@ export default function LifeScienceProductsCatalog() {
         {
           productId,
           quantity,
+          unit,
         },
         { withCredentials: true }
       );

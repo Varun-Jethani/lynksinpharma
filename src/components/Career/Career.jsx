@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import Apply from "./Apply";
+import axios from "axios";
 import {
   Search,
   MapPin,
@@ -29,6 +31,7 @@ const CareersPage = () => {
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [showApplyModal, setShowApplyModal] = useState(false);
   const openPositionsRef = useRef(null);
 
   // Redux: fetch jobs from API
@@ -117,9 +120,10 @@ const CareersPage = () => {
     return matchesSearch && matchesLocation;
   });
 
-  const handleApply = (jobId) => {
-    // In a real app, this would open an application form or redirect to an application page
-    alert(`Application form for job ${jobId} would open here!`);
+  // Open Apply modal with job info
+  const handleApply = (job) => {
+    setSelectedJob(job);
+    setShowApplyModal(true);
   };
 
   return (
@@ -329,7 +333,7 @@ const CareersPage = () => {
                         <ArrowRight className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleApply(idx)}
+                        onClick={() => handleApply(job)}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 font-semibold"
                       >
                         {job.applyText || "Apply Now"}
@@ -416,11 +420,53 @@ const CareersPage = () => {
                 </div>
               )}
               <button
-                onClick={() => handleApply(selectedJob.title)}
+                onClick={() => handleApply(selectedJob)}
                 className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 font-semibold text-lg"
               >
                 {selectedJob.applyText || "Apply for This Position"}
               </button>
+              {/* Apply Modal */}
+              {showApplyModal && selectedJob && (
+                <Apply
+                  isOpen={showApplyModal}
+                  onClose={() => setShowApplyModal(false)}
+                  careerId={selectedJob._id || selectedJob.id}
+                  position={selectedJob.title}
+                  onSubmit={async (
+                    formData,
+                    setSubmitStatus,
+                    setIsSubmitting,
+                    resetForm
+                  ) => {
+                    setIsSubmitting(true);
+                    setSubmitStatus(null);
+                    try {
+                      const formDataToSend = new FormData();
+                      formDataToSend.append("name", formData.name);
+                      formDataToSend.append("email", formData.email);
+                      formDataToSend.append("phone", formData.phone);
+                      formDataToSend.append("experience", formData.experience);
+                      formDataToSend.append(
+                        "careerId",
+                        selectedJob._id || selectedJob.id
+                      );
+                      formDataToSend.append("position", selectedJob.title);
+                      formDataToSend.append("resume", formData.resume);
+                      await axios.post("/career/apply", formDataToSend);
+                      setSubmitStatus("success");
+                      setTimeout(() => {
+                        setShowApplyModal(false);
+                        resetForm();
+                        setSubmitStatus(null);
+                      }, 2000);
+                    } catch (error) {
+                      setSubmitStatus("error");
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

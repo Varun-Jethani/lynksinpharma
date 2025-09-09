@@ -289,7 +289,7 @@ const ContactUs = () => {
                     </option>
                     <option value="Technical Support">Technical Support</option>
                     <option value="API Intermediate">API Intermediate</option>
-                    <option value="Clinical Research Support">
+                    <option value="Clinical Trial Research Support">
                       Clinical Research Support
                     </option>
                     <option value="Other">Other</option>
