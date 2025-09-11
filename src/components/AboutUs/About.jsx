@@ -2,6 +2,8 @@ import React from "react";
 import { Users, Target, Eye, History, Award, User } from "lucide-react";
 import Footer from "../Footer";
 import { useNavigate } from "react-router-dom";
+import kishor_chopde from "../../assets/kishor_chopde.jpg";
+import shital_chopde from "../../assets/shital_chopde.jpg";
 
 const About = () => {
   const navigate = useNavigate();
@@ -221,7 +223,12 @@ const About = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
             <div className="relative mx-auto w-32 h-32 mb-6">
               <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl">
-                <User className="w-16 h-16 text-white" />
+                <img
+                  src={kishor_chopde}
+                  alt="Kishor Chopde"
+                  className="w-32 h-32 rounded-full object-cover"
+                />
+              
               </div>
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -234,7 +241,11 @@ const About = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
             <div className="relative mx-auto w-32 h-32 mb-6">
               <div className="w-full h-full bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center shadow-2xl">
-                <User className="w-16 h-16 text-white" />
+                <img
+                  src={shital_chopde}
+                  alt="Shital Chopde"
+                  className="w-32 h-32 rounded-full object-cover rotate-[-10deg]"
+                />
               </div>
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
