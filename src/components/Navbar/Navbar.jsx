@@ -23,7 +23,7 @@ const Navbar = () => {
   // Get cart data from Redux store (assuming you have cart slice)
   const cartItems = useSelector((state) => state.cart?.items || []);
   const cartItemCount = cartItems.reduce(
-    (total, item) => total + (item.quantity || 0),
+    (total, item) => total + 1,
     0
   );
 
