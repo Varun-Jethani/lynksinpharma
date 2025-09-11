@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Eye, ShoppingCart, Plus, Minus, Check } from "lucide-react";
+import { Eye, ShoppingCart, Plus, Minus, Check, RefreshCw } from "lucide-react";
 
 const ProductsGrid = ({
   filteredProducts,
@@ -15,6 +15,11 @@ const ProductsGrid = ({
   const [units, setUnits] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
 
+  // New state for tracking pending cart updates
+  const [pendingCartUpdates, setPendingCartUpdates] = useState({});
+
+  console.log("ProductsGrid userCart:", userCart);
+
   // Optimized functions with useCallback
   const isInCart = useCallback(
     (productId) => {
@@ -25,7 +30,7 @@ const ProductsGrid = ({
 
   const getCartQuantity = useCallback(
     (productId) => {
-      const cartItem = userCart.find((item) => item.product === productId);
+      const cartItem = userCart.find((item) => item.productId === productId);
       return cartItem ? cartItem.quantity : 0;
     },
     [userCart]
@@ -41,7 +46,11 @@ const ProductsGrid = ({
 
   const getQuantity = (catalogNo) => {
     const qty = quantities[catalogNo];
-    return qty === "" || qty === undefined || qty === null ? 1 : qty;
+    const parsedQty = Number(qty);
+    if (!qty || isNaN(parsedQty) || parsedQty < 1) {
+      return 1; // default fallback quantity
+    }
+    return parsedQty;
   };
 
   const getUnit = (catalogNo) => units[catalogNo] || "mg";
@@ -75,16 +84,83 @@ const ProductsGrid = ({
     (productId, newQuantity, newUnit) => {
       if (newQuantity >= 1 && onUpdateCart) {
         onUpdateCart(productId, Math.max(1, newQuantity), newUnit);
+        // Clear pending updates after successful update
+        setPendingCartUpdates((prev) => {
+          const updated = { ...prev };
+          delete updated[productId];
+          return updated;
+        });
       }
     },
     [onUpdateCart]
   );
 
+  // New function to handle pending quantity changes
+  const handlePendingQuantityChange = useCallback(
+    (productId, newQuantity, newUnit) => {
+      setPendingCartUpdates((prev) => ({
+        ...prev,
+        [productId]: { quantity: newQuantity, unit: newUnit },
+      }));
+    },
+    []
+  );
+
+  // Function to apply pending updates
+  const applyPendingUpdate = useCallback(
+    (productId) => {
+      const pendingUpdate = pendingCartUpdates[productId];
+      if (pendingUpdate) {
+        handleUpdateCartQuantity(
+          productId,
+          pendingUpdate.quantity,
+          pendingUpdate.unit
+        );
+      }
+    },
+    [pendingCartUpdates, handleUpdateCartQuantity]
+  );
+
+  // Function to cancel pending updates
+  const cancelPendingUpdate = useCallback((productId) => {
+    setPendingCartUpdates((prev) => {
+      const updated = { ...prev };
+      delete updated[productId];
+      return updated;
+    });
+  }, []);
+
+  // Get current display quantity (pending or actual)
+  const getCurrentQuantity = useCallback(
+    (productId) => {
+      const pending = pendingCartUpdates[productId];
+      return pending ? pending.quantity : getCartQuantity(productId);
+    },
+    [pendingCartUpdates, getCartQuantity]
+  );
+
+  // Get current display unit (pending or actual)
+  const getCurrentUnit = useCallback(
+    (productId) => {
+      const pending = pendingCartUpdates[productId];
+      return pending ? pending.unit : getCartUnit(productId);
+    },
+    [pendingCartUpdates, getCartUnit]
+  );
+
+  // Check if there are pending updates
+  const hasPendingUpdates = useCallback(
+    (productId) => {
+      return pendingCartUpdates[productId] !== undefined;
+    },
+    [pendingCartUpdates]
+  );
+
   const incrementQuantity = (catalogNo, inCart = false, productId = null) => {
     if (inCart && productId) {
-      const currentQty = getCartQuantity(productId);
-      const currentUnit = getCartUnit(productId);
-      handleUpdateCartQuantity(productId, currentQty + 1, currentUnit);
+      const currentQty = getCurrentQuantity(productId);
+      const currentUnit = getCurrentUnit(productId);
+      handlePendingQuantityChange(productId, currentQty + 1, currentUnit);
     } else {
       const currentQty = getQuantity(catalogNo);
       updateQuantity(catalogNo, currentQty + 1);
@@ -93,10 +169,10 @@ const ProductsGrid = ({
 
   const decrementQuantity = (catalogNo, inCart = false, productId = null) => {
     if (inCart && productId) {
-      const currentQty = getCartQuantity(productId);
-      const currentUnit = getCartUnit(productId);
+      const currentQty = getCurrentQuantity(productId);
+      const currentUnit = getCurrentUnit(productId);
       if (currentQty > 1) {
-        handleUpdateCartQuantity(productId, currentQty - 1, currentUnit);
+        handlePendingQuantityChange(productId, currentQty - 1, currentUnit);
       }
     } else {
       const currentQty = getQuantity(catalogNo);
@@ -114,6 +190,9 @@ const ProductsGrid = ({
         const inCart = isInCart(product._id);
         const cartQuantity = getCartQuantity(product._id);
         const cartUnit = getCartUnit(product._id);
+        const currentQuantity = getCurrentQuantity(product._id);
+        const currentUnit = getCurrentUnit(product._id);
+        const hasPending = hasPendingUpdates(product._id);
         const isHovered = hoveredProduct === product._id;
 
         return (
@@ -206,7 +285,13 @@ const ProductsGrid = ({
                   </div>
 
                   {/* Enhanced Quantity Controls for Cart Items */}
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 shadow-inner border border-gray-200/50">
+                  <div
+                    className={`rounded-2xl p-6 shadow-inner border transition-all duration-300 ${
+                      hasPending
+                        ? "bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-200/70"
+                        : "bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200/50"
+                    }`}
+                  >
                     <div className="flex items-center justify-center gap-4 mb-4">
                       <span className="text-gray-700 font-semibold text-sm">
                         Quantity:
@@ -223,7 +308,7 @@ const ProductsGrid = ({
                             )
                           }
                           className="p-2.5 text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
-                          disabled={cartQuantity <= 1}
+                          disabled={currentQuantity <= 1}
                         >
                           <Minus
                             size={16}
@@ -233,21 +318,26 @@ const ProductsGrid = ({
 
                         <input
                           type="text"
-                          value={cartQuantity}
+                          value={currentQuantity}
                           onChange={(e) => {
                             const value = e.target.value;
                             // Allow completely empty field while typing
                             if (value === "") {
-                              return; // Don't update cart immediately when empty
+                              handlePendingQuantityChange(
+                                product._id,
+                                "",
+                                currentUnit
+                              );
+                              return;
                             }
                             // Only allow numbers
                             if (/^\d+$/.test(value)) {
                               const numValue = parseInt(value, 10);
                               if (numValue >= 1) {
-                                handleUpdateCartQuantity(
+                                handlePendingQuantityChange(
                                   product._id,
                                   numValue,
-                                  cartUnit
+                                  currentUnit
                                 );
                               }
                             }
@@ -260,14 +350,18 @@ const ProductsGrid = ({
                             // Ensure minimum value on blur
                             const value = e.target.value.trim();
                             if (value === "" || parseInt(value, 10) < 1) {
-                              handleUpdateCartQuantity(
+                              handlePendingQuantityChange(
                                 product._id,
                                 1,
-                                cartUnit
+                                currentUnit
                               );
                             }
                           }}
-                          className="w-20 px-2 py-2.5 text-center font-bold text-gray-900 bg-transparent border-0 focus:outline-none focus:ring-0 focus:bg-blue-50 transition-colors duration-200"
+                          className={`w-20 px-2 py-2.5 text-center font-bold bg-transparent border-0 focus:outline-none focus:ring-0 transition-colors duration-200 ${
+                            hasPending
+                              ? "text-orange-900 focus:bg-orange-50"
+                              : "text-gray-900 focus:bg-blue-50"
+                          }`}
                           placeholder="1"
                         />
 
@@ -290,13 +384,13 @@ const ProductsGrid = ({
                     </div>
 
                     {/* Unit Selector */}
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mb-4">
                       <select
-                        value={cartUnit}
+                        value={currentUnit}
                         onChange={(e) =>
-                          handleUpdateCartQuantity(
+                          handlePendingQuantityChange(
                             product._id,
-                            cartQuantity,
+                            currentQuantity,
                             e.target.value
                           )
                         }
@@ -307,6 +401,26 @@ const ProductsGrid = ({
                         <option value="kg">kg</option>
                       </select>
                     </div>
+
+                    {/* Update/Cancel Buttons - Only show when there are pending changes */}
+                    {hasPending && (
+                      <div className="flex gap-3 justify-center">
+                        <button
+                          onClick={() => applyPendingUpdate(product._id)}
+                          className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+                        >
+                          <RefreshCw size={14} />
+                          Update
+                        </button>
+
+                        <button
+                          onClick={() => cancelPendingUpdate(product._id)}
+                          className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
