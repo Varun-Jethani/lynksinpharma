@@ -23,6 +23,8 @@ import Header from "./Header";
 import { s } from "framer-motion/client";
 import { fetchSearchHistory } from "../../../store/searchHistorySlice";
 import RecentSearches from "./RecentSearches";
+import Footer from "../Footer";
+import { addToCart, updateCartItem } from "../../../store/cartSlice";
 
 const ProductModal = ({ product, onClose }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -110,6 +112,8 @@ export default function LifeScienceProductsCatalog() {
     loading,
     error,
   } = useSelector((state) => state.products);
+  const userCart = useSelector((state) => state.cart.items || []);
+  console.log(userCart);
   const userProfile = useSelector((state) => state.user.profile);
   const userLoading = useSelector((state) => state.user.loading);
   const searchHistory = useSelector((state) => state.searchHistory.items);
@@ -208,47 +212,57 @@ export default function LifeScienceProductsCatalog() {
 
   // Add to cart handler (for new items)
   const handleAddToCart = async (product, quantity, unit) => {
-    try {
-      setCartUpdateLoading(true);
-      await axios.post(
-        "/user/cart/add",
-        {
-          productId: product._id,
-          quantity,
-          unit,
-        },
-        { withCredentials: true }
-      );
+    setCartUpdateLoading(true);
+    if (userProfile) {
+      // Logged in: use backend
+      try {
+        await axios.post(
+          "/user/cart/add",
+          {
+            productId: product._id,
+            quantity,
+            unit,
+          },
+          { withCredentials: true }
+        );
+        toast.success("Product added to cart!");
+        dispatch(fetchUserProfile());
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to add to cart.");
+      }
+    } else {
+      // Guest: use Redux/localStorage
+      dispatch(addToCart({ productId: product._id, quantity, unit }));
       toast.success("Product added to cart!");
-      // Refresh user profile to update cart
-      dispatch(fetchUserProfile());
-    } catch (error) {
-      toast.error("Please Login to add items to cart.");
-    } finally {
-      setCartUpdateLoading(false);
     }
+    setCartUpdateLoading(false);
   };
 
   // Update cart quantity handler (for existing cart items)
   const handleUpdateCart = async (productId, quantity, unit) => {
-    try {
-      setCartUpdateLoading(true);
-      await axios.post(
-        "/user/cart/update",
-        {
-          productId,
-          quantity,
-          unit,
-        },
-        { withCredentials: true }
-      );
-      // Refresh user profile to update cart
-      dispatch(fetchUserProfile());
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update cart.");
-    } finally {
-      setCartUpdateLoading(false);
+    setCartUpdateLoading(true);
+    if (userProfile) {
+      // Logged in: use backend
+      try {
+        await axios.post(
+          "/user/cart/update",
+          {
+            productId,
+            quantity,
+            unit,
+          },
+          { withCredentials: true }
+        );
+        dispatch(fetchUserProfile());
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to update cart.");
+      }
+    } else {
+      // Guest: use Redux/localStorage
+      dispatch(updateCartItem({ productId, quantity, unit }));
+      toast.success("Cart updated!");
     }
+    setCartUpdateLoading(false);
   };
 
   //add search history tracking
@@ -300,16 +314,16 @@ export default function LifeScienceProductsCatalog() {
         theme="colored"
       />
       {/* Loading/Error States */}
-      {loading && (
-        <div className="text-center py-10 text-xl text-blue-600 font-bold">
+      {/* {loading && (
+        <div className="text-center py-5 text-xl text-blue-600 font-bold">
           Loading products...
         </div>
       )}
       {error && (
-        <div className="text-center py-10 text-xl text-red-600 font-bold">
+        <div className="text-center py-5 text-xl text-red-600 font-bold">
           {error}
         </div>
-      )}
+      )} */}
 
       {/* Cart Update Loading Overlay */}
       {cartUpdateLoading && (
@@ -436,7 +450,7 @@ export default function LifeScienceProductsCatalog() {
           onAddToCart={handleAddToCart}
           onUpdateCart={handleUpdateCart}
           handleViewProduct={handleViewProduct}
-          userCart={userProfile?.cart || []}
+          userCart={userProfile?.cart || userCart}
         />
 
         {/* Enhanced No Results - Responsive */}
@@ -464,6 +478,7 @@ export default function LifeScienceProductsCatalog() {
           onClose={() => setSelectedProduct(null)}
         />
       )}
+      <Footer />
     </div>
   );
 }

@@ -20,17 +20,28 @@ import {
   MapPin,
   FileText,
 } from "lucide-react";
-import { fetchCart } from "../../../store/cartSlice";
+import {
+  clearCart,
+  fetchCart,
+  removeCartItem,
+  updateCartItem,
+} from "../../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
 import EmptyCart from "./EmptyCart";
 import CartItems from "./CartItems";
 import InquiryModal from "./InquiryModal";
+import { fetchProducts } from "../../../store/productsSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(fetchProducts());
+    dispatch(fetchCart());
+  }, [dispatch]);
   const cartState = useSelector((state) => state.cart) || {};
   const { items: cartItems = [], loading = false, error = null } = cartState;
+  const userProfile = useSelector((state) => state.user.profile);
   console.log("Cart items:", cartItems);
 
   // Modal state
@@ -54,46 +65,55 @@ const Cart = () => {
     dispatch(fetchCart());
   }, [dispatch]);
 
-  // Update quantity in cart (API call)
-  // Update quantity in cart (API call) - now also sends unit
+  // Update quantity in cart (API call or Redux for guests)
   const updateQuantity = async (productId, newQuantity, unit) => {
     if (newQuantity < 1) return;
-    console.log(
-      "Updated quantity for",
-      productId,
-      "to",
-      newQuantity,
-      "with unit",
-      unit
-    );
-    try {
-      await axios.post(
-        "/user/cart/update",
-        { productId, quantity: newQuantity, unit },
-        { withCredentials: true }
-      );
-
-      dispatch(fetchCart());
-      // Clear temp quantity after successful update
+    if (userProfile) {
+      // Logged in: use backend
+      try {
+        await axios.post(
+          "/user/cart/update",
+          { productId, quantity: newQuantity, unit },
+          { withCredentials: true }
+        );
+        dispatch(fetchCart());
+        setTempQuantities((prev) => {
+          const updated = { ...prev };
+          delete updated[productId];
+          return updated;
+        });
+      } catch (err) {
+        toast.error(
+          err.response?.data?.message || "Failed to update quantity."
+        );
+      }
+    } else {
+      // Guest: use Redux/localStorage
+      // Guest user: dispatch Redux action
+      dispatch(updateCartItem({ productId, quantity: newQuantity, unit }));
       setTempQuantities((prev) => {
         const updated = { ...prev };
         delete updated[productId];
         return updated;
       });
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update quantity.");
+      toast.success("Cart updated!");
     }
   };
 
-  // Remove item from cart (API call)
-  const removeItem = async (productId) => {
-    try {
-      await axios.delete(`/user/cart/remove/${productId}`, {
-        withCredentials: true,
-      });
-      dispatch(fetchCart());
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to remove item.");
+  // Remove item from cart (API call or Redux for guests)
+  const removeItem = async (productId, unit) => {
+    if (userProfile) {
+      try {
+        await axios.delete(`/user/cart/remove/${productId}`, {
+          withCredentials: true,
+        });
+        dispatch(fetchCart());
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to remove item.");
+      }
+    } else {
+      dispatch(removeCartItem({ productId }));
+      toast.success("Item removed from cart!");
     }
   };
 
@@ -172,7 +192,11 @@ const Cart = () => {
           company: "",
           message: "",
         });
-        dispatch(fetchCart()); // Refresh cart after order
+
+        setTimeout(() => {
+          dispatch(clearCart());
+          dispatch(fetchCart()); // or any post-clear sync fetch
+        }, 500); // 0.5 second delay/ Refresh cart after order
       } catch (err) {
         toast.error(
           err.response?.data?.message ||
@@ -183,18 +207,23 @@ const Cart = () => {
   };
 
   // Map cart items to display format
+  const products = useSelector((state) => state.products.items) || [];
   const mergedCartItems = cartItems.map((cartItem) => {
-    const product = cartItem.product || {};
+    let product = cartItem.product || {};
+    // For guest users, join with products list
+    if (!userProfile) {
+      product = products.find((p) => p._id === cartItem.productId) || {};
+    }
     return {
       ...cartItem,
       catalogNo: product.CatelogNumber || "",
       name: product.ChemicalName || "",
       casNo: product.CASNumber || "",
       mw: product.MolecularWeight?.toString() || "",
-      purity: "Research Grade", // Default since not in your data structure
-      formula: product.formula || "", // Add if available in your data
+      purity: product.purity || "Research Grade",
+      formula: product.formula || "",
       image: product.Image || "",
-      productId: product._id || cartItem._id,
+      productId: product._id || cartItem.productId || cartItem._id,
     };
   });
 

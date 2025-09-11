@@ -23,6 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCareers } from "../../../store/CareerSlice";
+import Footer from "../Footer";
 
 const CareersPage = () => {
   const navigate = useNavigate();
@@ -472,19 +473,7 @@ const CareersPage = () => {
         </div>
       )}
 
-      {/* CTA Section */}
-      {/* <div className="py-20 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Join Our Team?</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Don't see a perfect fit? We're always looking for talented
-            individuals. Send us your resume and let's talk!
-          </p>
-          <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
-            Send Your Resume
-          </button>
-        </div>
-      </div> */}
+      <Footer />
     </div>
   );
 };

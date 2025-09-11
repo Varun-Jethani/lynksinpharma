@@ -175,20 +175,6 @@ const Profile = () => {
                       </p>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border border-orange-100">
-                    <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-orange-700 uppercase tracking-wide">
-                        Address
-                      </p>
-                      <p className="text-gray-900 font-medium text-lg">
-                        {userData.address || "No address provided"}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

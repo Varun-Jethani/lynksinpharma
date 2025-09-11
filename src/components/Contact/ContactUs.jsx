@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import Footer from "../Footer";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -152,7 +153,9 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Phone</h3>
-                      <p className="text-gray-600">+91 9422117461</p>
+                      <p className="text-gray-600">
+                        +91 9422117461 +91 99211 33229
+                      </p>
                     </div>
                   </div>
 
@@ -290,7 +293,7 @@ const ContactUs = () => {
                     <option value="Technical Support">Technical Support</option>
                     <option value="API Intermediate">API Intermediate</option>
                     <option value="Clinical Trial Research Support">
-                      Clinical Research Support
+                      Clinical Trial Research Support
                     </option>
                     <option value="Other">Other</option>
                   </select>
@@ -398,6 +401,7 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

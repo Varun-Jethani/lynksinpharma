@@ -10,6 +10,7 @@ const ProductsGrid = ({
   handleViewProduct,
   userCart = [],
 }) => {
+  console.log("ProductsGrid userCart:", userCart);
   const [quantities, setQuantities] = useState({});
   const [units, setUnits] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
@@ -17,7 +18,7 @@ const ProductsGrid = ({
   // Optimized functions with useCallback
   const isInCart = useCallback(
     (productId) => {
-      return userCart.some((item) => item.product === productId);
+      return userCart.some((item) => item.productId === productId);
     },
     [userCart]
   );
