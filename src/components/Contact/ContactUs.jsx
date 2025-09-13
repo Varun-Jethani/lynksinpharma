@@ -222,7 +222,7 @@ const ContactUs = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="Dr. Ashish Kumar"
+                    placeholder="Enter your full name"
                   />
                 </div>
 
@@ -241,7 +241,7 @@ const ContactUs = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="Ashish.kumar@university.edu"
+                    placeholder="Enter your email address"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ const ContactUs = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/70"
-                    placeholder="9745377123"
+                    placeholder="Enter your phone number"
                   />
                 </div>
 

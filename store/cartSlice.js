@@ -60,9 +60,9 @@ const cartSlice = createSlice({
       setLocalCart(state.items);
     },
     removeCartItem: (state, action) => {
-      const { productId, unit } = action.payload;
+      const { productId } = action.payload;
       state.items = state.items.filter(
-        (item) => !(item.productId === productId && item.unit === unit)
+        (item) => !(item.productId === productId)
       );
       setLocalCart(state.items);
     },
